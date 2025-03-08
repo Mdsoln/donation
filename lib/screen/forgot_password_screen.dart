@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/input_field.dart';
 
@@ -9,6 +10,15 @@ class ResetPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -51,19 +61,18 @@ class ResetPasswordScreen extends StatelessWidget {
                     // TODO: Implementing forgot password API call
                   },
                 ),
-                const SizedBox(height: 16),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    "Back to Login",
-                    style: TextStyle(
-                      fontFamily: 'Ubuntu',
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
+                const SizedBox(height: 24),
+                CustomButton(
+                  text: "Cancel",
+                  backgroundColor: Colors.white,
+                  textStyle: const TextStyle(
+                    fontFamily: 'Ubuntu',
+                    color: Colors.black, // Text color should be red
+                    fontWeight: FontWeight.bold,
                   ),
+                  onPressed: () {
+                    Navigator.pop(context); // Return to the login page
+                  },
                 ),
               ],
             ),
