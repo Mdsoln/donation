@@ -14,9 +14,10 @@ class RegisterScreen extends StatelessWidget {
           child: SingleChildScrollView( // Ensures it’s scrollable on smaller screens
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center, // Centers vertically
+              mainAxisAlignment: MainAxisAlignment.start, // Centers vertically
               crossAxisAlignment: CrossAxisAlignment.center, // Aligns text in the center
               children: [
+                const SizedBox(height: 16),
                 Image.asset(
                   'assets/images/drop.jpeg',
                   width: 80,
