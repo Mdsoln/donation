@@ -1,0 +1,48 @@
+name: donor_app
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.8
+  google_fonts: ^5.0.0
+  provider: ^6.1.2
+  fluttertoast: ^8.0.0
+  shared_preferences: ^2.2.2
+  flutter_native_splash: ^2.3.7
+  http: ^1.1.0
+  google_maps_flutter: ">=2.5.3 <3.0.0"
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  # Asset Images
+  assets:
+    - assets/images/drop.jpeg
+
+  # Custom Fonts
+  fonts:
+    - family: Ubuntu
+      fonts:
+        - asset: fonts/Ubuntu/Ubuntu-Regular.ttf
+        - asset: fonts/Ubuntu/Ubuntu-Bold.ttf
+          weight: 700
+        - asset: fonts/Ubuntu/Ubuntu-Italic.ttf
+          style: italic
