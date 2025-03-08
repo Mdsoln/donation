@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/input_field.dart';
 import 'forgot_password_screen.dart';
@@ -11,6 +12,14 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
