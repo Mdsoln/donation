@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../services/register_service.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/input_field.dart';
@@ -69,8 +73,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
           Navigator.pop(context);
         } catch (e) {
+          String errorMessage = "Something went wrong. Please try again.";
+          if (e is http.Response){
+              if (e.statusCode == 409) {
+                errorMessage = "Email already exists. Please use a different email.";
+              }else if (e.statusCode == 400) {
+                errorMessage = "Invalid request. Please check your input.";
+              }else if (e.statusCode == 500) {
+                errorMessage = "Server error. Please try again later.";
+              } else {
+                errorMessage = "An error occurred. Status code: ${e.statusCode}";
+              }
+          } else if (e is SocketException) {
+            errorMessage = "No internet connection. Please check your network.";
+          } else if (e is TimeoutException) {
+            errorMessage = "Request timed out. Please try again.";
+          }
+
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("$e"), backgroundColor: Colors.red),
+            SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
           );
         } finally {
           setState(() => isLoading = false);

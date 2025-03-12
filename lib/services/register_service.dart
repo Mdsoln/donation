@@ -29,7 +29,10 @@ class RegisterService{
           if (response.statusCode == 201) {
             return jsonDecode(response.body);
           } else {
-            throw Exception(response.body);
+
+            final responseBody = jsonDecode(response.body);
+            final responseError = responseBody["error"] ?? "Registration failed. Please try again.";
+            throw http.Response(responseError, response.statusCode);
           }
         }
 }
