@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-class InputField extends StatelessWidget {
+class InputField extends StatefulWidget {
   final String labelText;
   final String hintText;
   final IconData? icon;
   final bool isPassword;
   final double borderRadius;
-  final TextEditingController? controller; // Added controller
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   const InputField({
     super.key,
@@ -15,33 +16,76 @@ class InputField extends StatelessWidget {
     this.icon,
     this.isPassword = false,
     this.borderRadius = 12.0,
-    this.controller, // Added controller
+    this.controller,
+    this.validator,
   });
+
+  @override
+  _InputFieldState createState() => _InputFieldState();
+}
+
+class _InputFieldState extends State<InputField> {
+  String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextField(
-        controller: controller, // Assign controller here
-        obscureText: isPassword,
-        style: const TextStyle(
-          fontFamily: 'Ubuntu',
-          fontSize: 16,
-          color: Colors.black,
-        ),
-        decoration: InputDecoration(
-          labelText: labelText,
-          hintText: hintText,
-          prefixIcon: icon != null ? Icon(icon) : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
-            borderSide: BorderSide(color: Colors.grey.shade300),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            controller: widget.controller,
+            obscureText: widget.isPassword,
+            style: const TextStyle(
+              fontFamily: 'Ubuntu',
+              fontSize: 16,
+              color: Colors.black,
+            ),
+            decoration: InputDecoration(
+              labelText: widget.labelText,
+              hintText: widget.hintText,
+              prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderSide: const BorderSide(color: Colors.blue, width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderSide: const BorderSide(color: Colors.red, width: 2),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderSide: const BorderSide(color: Colors.red, width: 2),
+              ),
+              filled: true,
+              fillColor: Colors.grey.shade100,
+              errorText: errorMessage,
+            ),
+            validator: widget.validator,
+            onChanged: (value) {
+              setState(() {
+                errorMessage = widget.validator?.call(value);
+              });
+            },
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          filled: true,
-          fillColor: Colors.grey.shade100,
-        ),
+          if (errorMessage != null) // Show error message if present
+            Padding(
+              padding: const EdgeInsets.only(top: 4, left: 8),
+              child: Text(
+                errorMessage!,
+                style: const TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
+        ],
       ),
     );
   }
