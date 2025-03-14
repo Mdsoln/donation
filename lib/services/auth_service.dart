@@ -17,7 +17,7 @@ class AuthException implements Exception {
 }
 
 class AuthService {
-  final String baseUrl = "http://192.168.1.194:8080/api/v1/donorapp";
+  final String baseUrl = "http://192.168.8.49:8080/api/v1/donorapp";
 
   Future<AuthResponse> login(AuthRequest request) async {
     final String url = "$baseUrl/login";
