@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/auth_model.dart';
 import '../services/auth_service.dart';
@@ -48,29 +47,29 @@ class _LoginScreenState extends State<LoginScreen> {
         SnackBar(content: Text(response.message)),
       );
 
+      setState(() => _isLoading = false);
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => DashboardScreen()),
       );
+    } on AuthException catch (e) {
+      _showErrorSnackBar(e.message);
+    } on SocketException {
+      _showErrorSnackBar("No internet connection. Please check your network.");
+    } on TimeoutException {
+      _showErrorSnackBar("Request timed out. Please try again.");
     } catch (e) {
-      String errorMessage = "Something went wrong. Please try again.";
-      if (e is http.Response) {
-        if (e.statusCode == 401) {
-          errorMessage = "Wrong username or password";
-        } else if (e.statusCode == 500) {
-          errorMessage = "Server error. Please try again later.";
-        }
-      } else if (e is SocketException) {
-        errorMessage = "No internet connection. Please check your network.";
-      } else if (e is TimeoutException) {
-        errorMessage = "Request timed out. Please try again.";
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-      );
+      _showErrorSnackBar("Something went wrong. Please try again.");
+    } finally {
+      setState(() => _isLoading = false);
     }
+  }
 
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
   }
 
 
