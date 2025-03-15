@@ -38,121 +38,141 @@ class DashboardScreen extends StatelessWidget {
 
                   // 🔴 Profile Section
                   Row(
+                    mainAxisSize: MainAxisSize.min, // Ensure the Row only takes up the space it needs
                     children: [
                       // 🔴 Left Side: Profile Circle, Name, and Location
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Profile Circle and Name
-                          Row(
-                            children: [
-                              // Profile Circle
-                              CircleAvatar(
-                                radius: 35,
-                                backgroundImage: AssetImage("assets/profile.jpg"),
-                              ),
-                              const SizedBox(width: 10),
-                              // Name
-                              Text(
-                                "AISHA M.",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                      Expanded(
+                        flex: 1, // Give more space to the left side
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Profile Circle and Name
+                            Row(
+                              children: [
+                                // Profile Circle
+                                CircleAvatar(
+                                  radius: 35,
+                                  backgroundImage: AssetImage("assets/profile.jpg"),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10), // Spacing between Name and Location
-                          // Location
-                          Padding(
-                            padding: const EdgeInsets.only(left: 45), // Align with the profile circle
-                            child: Text(
-                              "Ilaia, Dar es salaam",
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                color: Colors.white,
+                                const SizedBox(width: 10),
+                                // Name
+                                Flexible(
+                                  child: Text(
+                                    "Mdsoln",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis, // Handle overflow
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10), // Spacing between Name and Location
+                            // Location
+                            Padding(
+                              padding: const EdgeInsets.only(left: 2), // Align with the profile circle
+                              child: Text(
+                                "Mawasiliano, Dar es salaam",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis, // Handle overflow
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
 
-                      const Spacer(), // Pushes the right content to the end
+                      const SizedBox(width: 10), // Spacing between left and right content
 
                       // 🔴 Right Side: Blood Group and Donation Times with Vertical Lines
-                      Row(
-                        children: [
-                          // Blood Group
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Vertical Line
-                              Container(
-                                width: 2,
-                                height: 40, // Adjust height to match the content
-                                color: Colors.white.withOpacity(0.5),
-                                margin: const EdgeInsets.only(right: 10),
-                              ),
-                              // Blood Group Text
-                              Column(
+                      Expanded(
+                        flex: 1, // Give more space to the right side
+                        child: Row(
+                          children: [
+                            // Blood Group
+                            Expanded(
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "Blood Group",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      color: Colors.white60,
-                                    ),
+                                  // Vertical Line
+                                  Container(
+                                    width: 2,
+                                    height: 55,
+                                    color: Colors.white.withOpacity(0.5),
+                                    margin: const EdgeInsets.only(right: 10),
                                   ),
-                                  Text(
-                                    "A+",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
+                                  // Blood Group Text
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Blood\nGroup",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 14,
+                                          color: Colors.white60,
+                                        ),
+                                      ),
+                                      Text(
+                                        "A+",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                          const SizedBox(width: 20), // Spacing between Blood Group and Donation Times
-                          // Donation Times
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Vertical Line
-                              Container(
-                                width: 2,
-                                height: 40, // Adjust height to match the content
-                                color: Colors.white.withOpacity(0.5),
-                                margin: const EdgeInsets.only(right: 10),
-                              ),
-                              // Donation Times Text
-                              Column(
+                            ),
+                            const SizedBox(width: 4), // Spacing between Blood Group and Donation Times
+                            // Donation Times
+                            Expanded(
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "Donation Times",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      color: Colors.white60,
-                                    ),
+                                  // Vertical Line
+                                  Container(
+                                    width: 2,
+                                    height: 55, // Adjust height to match the content
+                                    color: Colors.white.withOpacity(0.5),
+                                    margin: const EdgeInsets.only(right: 10),
                                   ),
-                                  Text(
-                                    "8",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
+                                  // Donation Times Text
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Donation\nTimes",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 14,
+                                          color: Colors.white60,
+                                        ),
+                                      ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            "8", // Dynamic donation times
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
