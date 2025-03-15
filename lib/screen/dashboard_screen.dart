@@ -88,64 +88,62 @@ class DashboardScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Upcoming\nAppointment:",
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red.shade700,
-                          ),
-                        ),
-                        Text(
-                          "Attending Location:",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-
-                    // 🔴 Content Below Titles
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // 🔵 Countdown Box
-                        _countdownBox("1"),
-                        const SizedBox(width: 15),
-
-                        // 🟢 Right Section - Appointment Details
-                        Expanded(
+                        Expanded( // Left side (Appointment)
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Location Icon and Address
+                              Text(
+                                "Upcoming\nAppointment:",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red.shade700,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              _countdownBox("1"),
+                            ],
+                          ),
+                        ),
+                        Expanded( // Right side (Location)
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Attending Location:",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
                               Row(
                                 children: [
-                                  Expanded(
+                                  Expanded( // Prevents text overflow
                                     child: Text(
                                       "Dar Es Salaam Blood Bank\n123 Main Street, Dar Es Salaam, Tanzania",
                                       style: GoogleFonts.poppins(fontSize: 13),
                                     ),
                                   ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Text(
+                                    "March 10, 2025\nTime: 10:00 AM",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
                                   const Icon(
                                     Icons.location_on,
                                     color: Colors.red,
                                     size: 20,
                                   ),
-                                  const SizedBox(width: 3),
                                 ],
-                              ),
-                              const SizedBox(height: 5),
-
-                              // Date and Time
-                              Text(
-                                "March 10, 2025\nTime: 10:00 AM",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  color: Colors.grey.shade700,
-                                ),
                               ),
                             ],
                           ),
@@ -158,11 +156,14 @@ class DashboardScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Day to go",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width: 100,
+                          child: Text(
+                            "Day to go",
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         ElevatedButton(
@@ -206,7 +207,7 @@ class DashboardScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset("assets/blood_donation.jpg"),
+                child: Image.asset("assets/blood_donation.jpg", fit: BoxFit.cover),
               ),
             ),
           ],
