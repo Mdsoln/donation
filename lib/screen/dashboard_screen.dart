@@ -8,22 +8,13 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.red.shade700,
-        elevation: 0,
-        title: const Text(""),
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () {},
-        ),
-      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 🔴 Profile Header
+            // 🔴 Custom App Bar and Profile Section
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 20), // Adjust top padding for status bar
               decoration: BoxDecoration(
                 color: Colors.red.shade700,
                 borderRadius: const BorderRadius.only(
@@ -31,32 +22,136 @@ class DashboardScreen extends StatelessWidget {
                   bottomRight: Radius.circular(20),
                 ),
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  // Profile Image
-                  CircleAvatar(
-                    radius: 35,
-                    backgroundImage: AssetImage("assets/profile.jpg"),
-                  ),
-                  const SizedBox(width: 15),
-                  // User Details
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  // 🔴 Custom App Bar
+                  Row(
                     children: [
-                      Text(
-                        "AISHA M.",
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      IconButton(
+                        icon: const Icon(Icons.menu, color: Colors.white),
+                        onPressed: () {},
                       ),
-                      const SizedBox(height: 5),
+                      const Spacer(), // Pushes the title to the end (if needed)
+                    ],
+                  ),
+                  const SizedBox(height: 10), // Spacing between app bar and profile section
+
+                  // 🔴 Profile Section
+                  Row(
+                    children: [
+                      // 🔴 Left Side: Profile Circle, Name, and Location
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Profile Circle and Name
+                          Row(
+                            children: [
+                              // Profile Circle
+                              CircleAvatar(
+                                radius: 35,
+                                backgroundImage: AssetImage("assets/profile.jpg"),
+                              ),
+                              const SizedBox(width: 10),
+                              // Name
+                              Text(
+                                "AISHA M.",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10), // Spacing between Name and Location
+                          // Location
+                          Padding(
+                            padding: const EdgeInsets.only(left: 45), // Align with the profile circle
+                            child: Text(
+                              "Ilaia, Dar es salaam",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const Spacer(), // Pushes the right content to the end
+
+                      // 🔴 Right Side: Blood Group and Donation Times with Vertical Lines
                       Row(
                         children: [
-                          _infoBadge("Blood Group", "A+"),
-                          const SizedBox(width: 10),
-                          _infoBadge("Donation Times", "8"),
+                          // Blood Group
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Vertical Line
+                              Container(
+                                width: 2,
+                                height: 40, // Adjust height to match the content
+                                color: Colors.white.withOpacity(0.5),
+                                margin: const EdgeInsets.only(right: 10),
+                              ),
+                              // Blood Group Text
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Blood Group",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      color: Colors.white60,
+                                    ),
+                                  ),
+                                  Text(
+                                    "A+",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 20), // Spacing between Blood Group and Donation Times
+                          // Donation Times
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Vertical Line
+                              Container(
+                                width: 2,
+                                height: 40, // Adjust height to match the content
+                                color: Colors.white.withOpacity(0.5),
+                                margin: const EdgeInsets.only(right: 10),
+                              ),
+                              // Donation Times Text
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Donation Times",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      color: Colors.white60,
+                                    ),
+                                  ),
+                                  Text(
+                                    "8",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ],
