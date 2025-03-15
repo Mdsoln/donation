@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -83,12 +82,14 @@ class DashboardScreen extends StatelessWidget {
                   ],
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // 🔴 Titles: "Upcoming Appointment" and "Attending Location"
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Upcoming \nAppointment:",
+                          "Upcoming\nAppointment:",
                           style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -105,27 +106,40 @@ class DashboardScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 10),
+
+                    // 🔴 Content Below Titles
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _countdownBox("1","Day one to go"),
+                        // 🔵 Countdown Box
+                        _countdownBox("1"),
                         const SizedBox(width: 15),
+
+                        // 🟢 Right Section - Appointment Details
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Location Icon and Address
                               Row(
                                 children: [
-                                  const Icon(Icons.location_on, color: Colors.red, size: 20),
-                                  const SizedBox(width: 5),
                                   Expanded(
                                     child: Text(
                                       "Dar Es Salaam Blood Bank\n123 Main Street, Dar Es Salaam, Tanzania",
                                       style: GoogleFonts.poppins(fontSize: 13),
                                     ),
                                   ),
+                                  const Icon(
+                                    Icons.location_on,
+                                    color: Colors.red,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 3),
                                 ],
                               ),
                               const SizedBox(height: 5),
+
+                              // Date and Time
                               Text(
                                 "March 10, 2025\nTime: 10:00 AM",
                                 style: GoogleFonts.poppins(
@@ -138,18 +152,26 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 15),
+
+                    // 🟣 "Day to go" + "View" Button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           "Day to go",
-                          style: GoogleFonts.poppins(fontSize: 14),
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red.shade700,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
                           child: const Text("View"),
                         ),
@@ -223,22 +245,26 @@ class DashboardScreen extends StatelessWidget {
   }
 
   // 🔹 Helper Widget: Countdown Box
-  Widget _countdownBox(String number, String label) {
+  Widget _countdownBox(String number) {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          width: 55,
+          height: 55,
           decoration: BoxDecoration(
-            color: Colors.red.shade700,
-            borderRadius: BorderRadius.circular(10),
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.brown.shade700, width: 3),
           ),
+          alignment: Alignment.center,
           child: Text(
             number,
-            style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+            style: GoogleFonts.poppins(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.brown.shade700,
+            ),
           ),
         ),
-        const SizedBox(height: 5),
-        Text(label, style: GoogleFonts.poppins(fontSize: 12)),
       ],
     );
   }
