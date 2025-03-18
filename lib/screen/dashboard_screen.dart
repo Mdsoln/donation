@@ -1,47 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
-
-  @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
-
-class _DashboardScreenState extends State<DashboardScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Initialize the animation controller
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 5), // Total duration for forward + reverse
-    );
-
-    // Define the animation
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut, // Smooth animation
-      ),
-    );
-
-    // Start the animation with a delay
-    Future.delayed(const Duration(seconds: 2), () {
-      _controller.repeat(reverse: true); // Forward and reverse animation
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose(); // Dispose the controller when not needed
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,27 +70,16 @@ class _DashboardScreenState extends State<DashboardScreen>
                               ],
                             ),
                             const SizedBox(height: 10), // Spacing between Name and Location
-                            // Location with Sliding Animation
+                            // Location (Static)
                             Padding(
                               padding: const EdgeInsets.only(left: 2), // Align with the profile circle
-                              child: SizedBox(
-                                width: double.infinity, // Take full width
-                                child: AnimatedBuilder(
-                                  animation: _animation,
-                                  builder: (context, child) {
-                                    return Transform.translate(
-                                      offset: Offset(100 * _animation.value, 0), // Adjust 100 for sliding distance
-                                      child: Text(
-                                        "Mawasiliano, Dar es salaam",
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    );
-                                  },
+                              child: Text(
+                                "Mawasiliano, Dar es salaam",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  color: Colors.white,
                                 ),
+                                overflow: TextOverflow.ellipsis, // Handle overflow
                               ),
                             ),
                           ],
