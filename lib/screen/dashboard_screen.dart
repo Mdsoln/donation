@@ -31,18 +31,18 @@ class DashboardScreen extends StatelessWidget {
                         icon: const Icon(Icons.menu, color: Colors.white),
                         onPressed: () {},
                       ),
-                      const Spacer(), // Pushes the title to the end (if needed)
+                      const Spacer(),
                     ],
                   ),
-                  const SizedBox(height: 10), // Spacing between app bar and profile section
+                  const SizedBox(height: 10),
 
                   // 🔴 Profile Section
                   Row(
-                    mainAxisSize: MainAxisSize.min, // Ensure the Row only takes up the space it needs
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       // 🔴 Left Side: Profile Circle, Name, and Location
                       Expanded(
-                        flex: 1, // Give more space to the left side
+                        flex: 1,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -64,33 +64,33 @@ class DashboardScreen extends StatelessWidget {
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    overflow: TextOverflow.ellipsis, // Handle overflow
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10), // Spacing between Name and Location
+                            const SizedBox(height: 10),
                             // Location (Static)
                             Padding(
-                              padding: const EdgeInsets.only(left: 2), // Align with the profile circle
+                              padding: const EdgeInsets.only(left: 2),
                               child: Text(
                                 "Mawasiliano, Dar es salaam",
                                 style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   color: Colors.white,
                                 ),
-                                overflow: TextOverflow.ellipsis, // Handle overflow
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
                         ),
                       ),
 
-                      const SizedBox(width: 10), // Spacing between left and right content
+                      const SizedBox(width: 10),
 
                       // 🔴 Right Side: Blood Group and Donation Times with Vertical Lines
                       Expanded(
-                        flex: 1, // Give more space to the right side
+                        flex: 1,
                         child: Row(
                           children: [
                             // Blood Group
@@ -129,7 +129,7 @@ class DashboardScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 4), // Spacing between Blood Group and Donation Times
+                            const SizedBox(width: 4),
                             // Donation Times
                             Expanded(
                               child: Row(
@@ -138,7 +138,7 @@ class DashboardScreen extends StatelessWidget {
                                   // Vertical Line
                                   Container(
                                     width: 2,
-                                    height: 55, // Adjust height to match the content
+                                    height: 55,
                                     color: Colors.white.withOpacity(0.5),
                                     margin: const EdgeInsets.only(right: 10),
                                   ),
@@ -157,7 +157,7 @@ class DashboardScreen extends StatelessWidget {
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
                                           Text(
-                                            "8", // Dynamic donation times
+                                            "8",
                                             style: GoogleFonts.poppins(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
@@ -234,7 +234,7 @@ class DashboardScreen extends StatelessWidget {
                               const SizedBox(height: 10),
                               Row(
                                 children: [
-                                  Expanded( // Prevents text overflow
+                                  Expanded(
                                     child: Text(
                                       "Dar Es Salaam Blood Bank\n123 Main Street, Dar Es Salaam, Tanzania",
                                       style: GoogleFonts.poppins(fontSize: 13),
@@ -336,8 +336,8 @@ class DashboardScreen extends StatelessWidget {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: ""),
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: ""),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
         ],
       ),
