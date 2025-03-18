@@ -8,6 +8,7 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: const AppDrawer(), // Add the drawer
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,24 +26,32 @@ class DashboardScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // 🔴 Custom App Bar
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.menu, color: Colors.white),
-                        onPressed: () {},
-                      ),
-                      const Spacer(),
-                    ],
+                  Builder(
+                    builder: (context) {
+                      return Row(
+                        children: [
+                          // Menu Icon
+                          IconButton(
+                            icon: const Icon(Icons.menu, color: Colors.white),
+                            onPressed: () {
+                              // Open the drawer
+                              Scaffold.of(context).openDrawer();
+                            },
+                          ),
+                          const Spacer(), // Pushes the title to the end (if needed)
+                        ],
+                      );
+                    },
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 10), // Spacing between app bar and profile section
 
                   // 🔴 Profile Section
                   Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.min, // Ensure the Row only takes up the space it needs
                     children: [
                       // 🔴 Left Side: Profile Circle, Name, and Location
                       Expanded(
-                        flex: 1,
+                        flex: 1, // Give more space to the left side
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -64,33 +73,33 @@ class DashboardScreen extends StatelessWidget {
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    overflow: TextOverflow.ellipsis,
+                                    overflow: TextOverflow.ellipsis, // Handle overflow
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 10), // Spacing between Name and Location
                             // Location (Static)
                             Padding(
-                              padding: const EdgeInsets.only(left: 2),
+                              padding: const EdgeInsets.only(left: 2), // Align with the profile circle
                               child: Text(
                                 "Mawasiliano, Dar es salaam",
                                 style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   color: Colors.white,
                                 ),
-                                overflow: TextOverflow.ellipsis,
+                                overflow: TextOverflow.ellipsis, // Handle overflow
                               ),
                             ),
                           ],
                         ),
                       ),
 
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 10), // Spacing between left and right content
 
                       // 🔴 Right Side: Blood Group and Donation Times with Vertical Lines
                       Expanded(
-                        flex: 1,
+                        flex: 1, // Give more space to the right side
                         child: Row(
                           children: [
                             // Blood Group
@@ -129,7 +138,7 @@ class DashboardScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: 4), // Spacing between Blood Group and Donation Times
                             // Donation Times
                             Expanded(
                               child: Row(
@@ -138,7 +147,7 @@ class DashboardScreen extends StatelessWidget {
                                   // Vertical Line
                                   Container(
                                     width: 2,
-                                    height: 55,
+                                    height: 55, // Adjust height to match the content
                                     color: Colors.white.withOpacity(0.5),
                                     margin: const EdgeInsets.only(right: 10),
                                   ),
@@ -157,7 +166,7 @@ class DashboardScreen extends StatelessWidget {
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
                                           Text(
-                                            "8",
+                                            "8", // Dynamic donation times
                                             style: GoogleFonts.poppins(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
@@ -234,7 +243,7 @@ class DashboardScreen extends StatelessWidget {
                               const SizedBox(height: 10),
                               Row(
                                 children: [
-                                  Expanded(
+                                  Expanded( // Prevents text overflow
                                     child: Text(
                                       "Dar Es Salaam Blood Bank\n123 Main Street, Dar Es Salaam, Tanzania",
                                       style: GoogleFonts.poppins(fontSize: 13),
@@ -402,6 +411,168 @@ class DashboardScreen extends StatelessWidget {
           Icon(icon, size: 30),
           const SizedBox(height: 5),
           Text(label, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 12)),
+        ],
+      ),
+    );
+  }
+}
+
+// 🔴 Menu Drawer
+class AppDrawer extends StatelessWidget {
+  const AppDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          // 🔴 Drawer Header
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.red.shade700,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  radius: 35,
+                  backgroundImage: AssetImage("assets/profile.jpg"),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "AISHA M.",
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  "Ilaia, Dar es salaam",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // 🔴 Menu Items
+          ListTile(
+            leading: const Icon(Icons.home, color: Colors.red),
+            title: Text(
+              "Home",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            onTap: () {
+              // Navigate to Home
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.calendar_today, color: Colors.red),
+            title: Text(
+              "My Appointment",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            onTap: () {
+              // Navigate to My Appointment
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.history, color: Colors.red),
+            title: Text(
+              "Donation History",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            onTap: () {
+              // Navigate to Donation History
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.warning, color: Colors.red),
+            title: Text(
+              "Urgent Request",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            onTap: () {
+              // Navigate to Urgent Request
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.location_on, color: Colors.red),
+            title: Text(
+              "Find Donation Centers",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            onTap: () {
+              // Navigate to Find Donation Centers
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.article, color: Colors.red),
+            title: Text(
+              "Donation Guidelines",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            onTap: () {
+              // Navigate to Donation Guidelines
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings, color: Colors.red),
+            title: Text(
+              "Setting",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            onTap: () {
+              // Navigate to Setting
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: Text(
+              "Log Out",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            onTap: () {
+              // Handle Log Out
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
         ],
       ),
     );
