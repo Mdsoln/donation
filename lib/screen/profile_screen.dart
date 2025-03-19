@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'dashboard_screen.dart';
+
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -45,7 +47,7 @@ class ProfileScreen extends StatelessWidget {
 
             // Name & Last Donation Date
             Text(
-              "Aisha M.",
+              "Mdsoln",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
@@ -54,7 +56,7 @@ class ProfileScreen extends StatelessWidget {
               style: TextStyle(color: Colors.grey),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
 
             // Donations, Requests, Appointments
             Row(
@@ -66,13 +68,13 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             // Gender & Blood Group
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _iconCard(Icons.male, "Gender", "Female", Colors.pink),
+                _iconCard(Icons.male, "Gender", "Male", Colors.pink),
                 _iconCard(Icons.bloodtype, "Blood Group", "A+", Colors.red),
               ],
             ),
@@ -80,10 +82,10 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 10),
 
             // Details Section
-            _detailTile(Icons.location_on, "Location", "Kijitonyama"),
-            _detailTile(Icons.calendar_today, "Date of Birth", "24th Aug, 2002"),
-            _detailTile(Icons.phone, "Phone Number", "+25575379158"),
-            _detailTile(Icons.email, "Email Address", "aishamussamzava@gmail.com"),
+            _detailTile(Icons.location_on, "Location", "Mawasiliano"),
+            _detailTile(Icons.calendar_today, "Date of Birth", "3th Aug, 2002"),
+            _detailTile(Icons.phone, "Phone Number", "+255717611117"),
+            _detailTile(Icons.email, "Email Address", "muddyfakih98@gmail.com"),
 
             // Height & Weight
             Row(
@@ -105,6 +107,20 @@ class ProfileScreen extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
         ],
+        onTap: (index){
+          //todo: implementing index navigation to Education/resource screen
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const DashboardScreen()),
+            );
+          }else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfileScreen()),
+            );
+          }
+        },
       ),
     );
   }
@@ -126,7 +142,7 @@ class ProfileScreen extends StatelessWidget {
   // Widget for Profile Details with Icons
   Widget _detailTile(IconData icon, String title, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
       child: Card(
         child: ListTile(
           leading: Icon(icon, color: Colors.red),
@@ -140,7 +156,7 @@ class ProfileScreen extends StatelessWidget {
   // Widget for Gender, Blood Group, Height, Weight
   Widget _iconCard(IconData icon, String title, String value, Color color) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
           Icon(icon, color: color, size: 30),
