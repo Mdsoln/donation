@@ -424,157 +424,109 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: [
-          // 🔴 Drawer Header
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.red.shade700,
-            ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
+            color: Colors.red.shade700,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  radius: 35,
-                  backgroundImage: AssetImage("assets/profile.jpg"),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "AISHA M.",
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "Ilaia, Dar es salaam",
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Colors.white,
-                  ),
+                // 🔴 Arrow Icon on the Left and Profile Section Centered
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // 🔴 Arrow Icon
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+
+                    // 🔴 Profile Section (Centered)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // 🔴 Profile Icon
+                        CircleAvatar(
+                          radius: 35,
+                          backgroundImage: AssetImage("assets/profile.jpg"),
+                        ),
+                        const SizedBox(width: 10),
+
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Mdsoln",
+                              style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              "Profile",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(width: 15),
+                  ],
                 ),
               ],
             ),
           ),
 
-          // 🔴 Menu Items
-          ListTile(
-            leading: const Icon(Icons.home, color: Colors.red),
-            title: Text(
-              "Home",
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.black,
-              ),
+          // 🔴 Main Menu Items
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                _buildDrawerItem(Icons.home, "Home", context),
+                _buildDrawerItem(Icons.calendar_today, "My Appointment", context),
+                _buildDrawerItem(Icons.history, "Donation History", context),
+                _buildDrawerItem(Icons.warning, "Urgent Request", context),
+                _buildDrawerItem(Icons.location_on, "Find Donation Centers", context),
+                _buildDrawerItem(Icons.article, "Donation Guidelines", context),
+              ],
             ),
-            onTap: () {
-              // Navigate to Home
-              Navigator.pop(context); // Close the drawer
-            },
           ),
-          ListTile(
-            leading: const Icon(Icons.calendar_today, color: Colors.red),
-            title: Text(
-              "My Appointment",
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            onTap: () {
-              // Navigate to My Appointment
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.history, color: Colors.red),
-            title: Text(
-              "Donation History",
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            onTap: () {
-              // Navigate to Donation History
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.warning, color: Colors.red),
-            title: Text(
-              "Urgent Request",
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            onTap: () {
-              // Navigate to Urgent Request
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.location_on, color: Colors.red),
-            title: Text(
-              "Find Donation Centers",
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            onTap: () {
-              // Navigate to Find Donation Centers
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.article, color: Colors.red),
-            title: Text(
-              "Donation Guidelines",
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            onTap: () {
-              // Navigate to Donation Guidelines
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.settings, color: Colors.red),
-            title: Text(
-              "Setting",
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            onTap: () {
-              // Navigate to Setting
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: Text(
-              "Log Out",
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            onTap: () {
-              // Handle Log Out
-              Navigator.pop(context); // Close the drawer
-            },
+
+          // 🔴 Bottom Menu Items
+          Column(
+            children: [
+              const Divider(),
+              _buildDrawerItem(Icons.settings, "Setting", context),
+              _buildDrawerItem(Icons.logout, "Log Out", context),
+            ],
           ),
         ],
       ),
+    );
+  }
+
+  // 🔴 Helper Method for Drawer Items
+  Widget _buildDrawerItem(IconData icon, String title, BuildContext context) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.red),
+      title: Text(
+        title,
+        style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
+      ),
+      onTap: () {
+        Navigator.pop(context); // Close the drawer
+      },
     );
   }
 }
