@@ -1,3 +1,4 @@
+import 'package:donor_app/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -349,6 +350,21 @@ class DashboardScreen extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
         ],
+        onTap: (index) {
+          //todo: implementing index navigation to Education/resource screen
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const DashboardScreen()),
+            );
+          }
+          else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfileScreen()),
+            );
+          }
+        },
       ),
     );
   }
@@ -428,12 +444,12 @@ class AppDrawer extends StatelessWidget {
         children: [
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
+            padding: const EdgeInsets.fromLTRB(20, 64, 20, 20),
+            height: 180,
             color: Colors.red.shade700,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 🔴 Arrow Icon on the Left and Profile Section Centered
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -451,12 +467,19 @@ class AppDrawer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // 🔴 Profile Icon
-                        CircleAvatar(
-                          radius: 35,
-                          backgroundImage: AssetImage("assets/profile.jpg"),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                            );
+                          },
+                          child: CircleAvatar(
+                            radius: 35,
+                            backgroundImage: AssetImage("assets/profile.jpg"),
+                          ),
                         ),
                         const SizedBox(width: 10),
-
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -480,7 +503,6 @@ class AppDrawer extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     const SizedBox(width: 15),
                   ],
                 ),
