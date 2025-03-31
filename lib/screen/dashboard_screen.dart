@@ -1,6 +1,10 @@
 import 'package:donor_app/screen/profile_screen.dart';
+import 'package:donor_app/screen/urgent_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'HospitalSelectionScreen.dart';
+import 'donation_history_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -319,10 +323,38 @@ class DashboardScreen extends StatelessWidget {
                 childAspectRatio: 2,
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  _actionButton("Find Donation Center", Icons.location_on),
-                  _actionButton("Urgent Request", Icons.lock),
-                  _actionButton("Schedule Appointment", Icons.calendar_month),
-                  _actionButton("My Donation", Icons.favorite),
+                  _actionButton(
+                    "Find Donation Center",
+                    Icons.location_on,
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HospitalSelectionScreen()),
+                    ),
+                  ),
+                  _actionButton(
+                    "Urgent Request",
+                    Icons.lock,
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UrgentRequestScreen()),
+                    ),
+                  ),
+                  _actionButton(
+                    "Schedule Appointment",
+                    Icons.calendar_month,
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HospitalSelectionScreen()),
+                    ),
+                  ),
+                  _actionButton(
+                    "My Donation",
+                    Icons.favorite,
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DonationHistoryScreen()),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -411,7 +443,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   // 🔹 Helper Widget: Action Buttons
-  Widget _actionButton(String label, IconData icon) {
+  Widget _actionButton(String label, IconData icon, {VoidCallback? onPressed}) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
@@ -420,13 +452,15 @@ class DashboardScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 3,
       ),
-      onPressed: () {},
+      onPressed: onPressed,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, size: 30),
           const SizedBox(height: 5),
-          Text(label, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 12)),
+          Text(label,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(fontSize: 12)),
         ],
       ),
     );
