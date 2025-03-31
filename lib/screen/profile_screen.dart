@@ -76,7 +76,7 @@ class ProfileScreen extends StatelessWidget {
                   _IconWithLabelRow(
                     icon: Icons.female,
                     label: "Gender",
-                    value: "Female",
+                    value: "Male",
                     iconColor: Colors.pink,
                   ),
                   // Blood Group Section
@@ -97,10 +97,10 @@ class ProfileScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: const [
-                  _DetailTile(icon: Icons.location_on, title: "Location", value: "Kijlronyama"),
-                  _DetailTile(icon: Icons.calendar_today, title: "Date of Birth", value: "24th Aug, 2002"),
-                  _DetailTile(icon: Icons.phone, title: "Phone Number", value: "+255755379158"),
-                  _DetailTile(icon: Icons.email, title: "Email Address", value: "aishamusasmzava@gmail.com"),
+                  _DetailTile(icon: Icons.location_on, title: "Location", value: "Kijitonyama"),
+                  _DetailTile(icon: Icons.calendar_today, title: "Date of Birth", value: "03 Aug, 2002"),
+                  _DetailTile(icon: Icons.phone, title: "Phone Number", value: "+255717611117"),
+                  _DetailTile(icon: Icons.email, title: "Email Address", value: "muddyfakih98@gmail.com"),
                 ],
               ),
             ),
