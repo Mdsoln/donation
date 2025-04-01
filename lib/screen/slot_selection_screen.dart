@@ -19,7 +19,8 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
   List<Slot> availableSlots = [];
   bool isLoading = true;
   String errorMessage = '';
-  final String baseUrl = "http://192.168.247.49:8080/api/v1/donorapp";
+  String? infoMessage;
+  final String baseUrl = "http://192.168.233.49:8080/api/v1/donorapp";
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/hospitals/${widget.hospital.hospitalId}/slots'),
+        headers: {'Accept': 'application/json'},
       );
 
       if (response.statusCode == 200) {
@@ -38,9 +40,16 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
         setState(() {
           availableSlots = data.map((json) => Slot.fromJson(json)).toList();
           isLoading = false;
+          infoMessage = null;
+        });
+      } else if (response.statusCode == 204) {
+        setState(() {
+          availableSlots = [];
+          isLoading = false;
+          infoMessage = 'No available slots at this time';
         });
       } else {
-        throw Exception('Failed to load slots');
+        throw Exception('Failed to load slots: ${response.statusCode}');
       }
     } catch (e) {
       setState(() {
