@@ -8,6 +8,7 @@ class InputField extends StatefulWidget {
   final double borderRadius;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
 
   const InputField({
     super.key,
@@ -18,6 +19,7 @@ class InputField extends StatefulWidget {
     this.borderRadius = 12.0,
     this.controller,
     this.validator,
+    this.keyboardType,
   });
 
   @override
