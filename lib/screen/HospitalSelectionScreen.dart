@@ -14,7 +14,7 @@ class HospitalSelectionScreen extends StatefulWidget {
 }
 
 class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
-  final String baseUrl = "http://192.168.233.49:8080/api/v1/donorapp";
+  final String baseUrl = "http://192.168.57.49:8080/api/v1/donorapp";
 
   List<Hospital> hospitals = [];
   bool isLoading = true;
@@ -64,7 +64,7 @@ class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
     try {
      // Get cached location first
       userPosition = await _getCachedLocation();
-
+      print("User location: ${userPosition?.latitude}, ${userPosition?.longitude}");
       // Get fresh location if possible
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (serviceEnabled) {
@@ -99,6 +99,7 @@ class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
               'radiusKm=10'
       ));
 
+      print("Response body: ${response.body}");
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         setState(() {
