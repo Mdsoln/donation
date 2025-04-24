@@ -20,7 +20,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
   bool isLoading = true;
   String errorMessage = '';
   String? infoMessage;
-  final String baseUrl = "http://localhost:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.122.49:8080/api/v1/donor";
 
   @override
   void initState() {
