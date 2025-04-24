@@ -1,7 +1,7 @@
-import 'dart:ffi';
+
 
 class HospitalResponse{
-  final Long id;
+  final int id;
   final String hospitalName;
   final String hospitalAddress;
 
