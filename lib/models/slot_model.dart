@@ -5,7 +5,7 @@ class Slot {
   final DateTime startTime;
   final DateTime endTime;
   final int maxCapacity;
-  final int currentBookings;
+  final int availableBookings;
 
   Slot({
     required this.slotId,
@@ -13,7 +13,7 @@ class Slot {
     required this.startTime,
     required this.endTime,
     required this.maxCapacity,
-    required this.currentBookings,
+    required this.availableBookings,
   });
 
   factory Slot.fromJson(Map<String, dynamic> json) {
@@ -23,9 +23,9 @@ class Slot {
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
       maxCapacity: json['maxCapacity'],
-      currentBookings: json['currentBookings'],
+      availableBookings: json['currentBookings'],
     );
   }
 
-  bool get isAvailable => currentBookings < maxCapacity;
+  bool get isAvailable => availableBookings < maxCapacity;
 }

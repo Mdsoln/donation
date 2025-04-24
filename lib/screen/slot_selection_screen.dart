@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/hospital_model.dart';
 import '../models/slot_model.dart';
@@ -30,9 +32,16 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
 
   Future<void> _fetchAvailableSlots() async {
     try {
+
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
       final response = await http.get(
         Uri.parse('$baseUrl/hospitals/${widget.hospital.hospitalId}/slots'),
-        headers: {'Accept': 'application/json'},
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       );
 
       if (response.statusCode == 200) {
@@ -280,19 +289,27 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
     final selectedSlot = availableSlots[selectedSlotIndex!];
 
     try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final decoded = JwtDecoder.decode(token!);
+      final donorId = decoded['userId'];
+
       final response = await http.post(
         Uri.parse('$baseUrl/appointments'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
         body: json.encode({
           'hospitalId': widget.hospital.hospitalId,
           'slotId': selectedSlot.slotId,
-          'donorId': 'YOUR_DONOR_ID', // Get from user session
-          'appointmentDate': selectedSlot.startTime.toIso8601String(),
+          'donorId': donorId,
         }),
       );
 
       if (response.statusCode == 201) {
-        // Success - show confirmation
+        // Success
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Appointment scheduled successfully!'),
