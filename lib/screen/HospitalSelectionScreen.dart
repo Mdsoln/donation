@@ -92,14 +92,22 @@ class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
 
   Future<void> _fetchHospitals() async {
     try {
-      final response = await http.get(Uri.parse(
-          '${baseUrl}/hospitals/nearby?'
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final response = await http.get(
+        Uri.parse(
+          '$baseUrl/hospitals/nearby?'
               'userLat=${userPosition?.latitude ?? 0}&'
               'userLon=${userPosition?.longitude ?? 0}&'
-              'radiusKm=10'
-      ));
+              'radiusKm=10',
+        ),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
 
-      print("Response body: ${response.body}");
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         setState(() {
