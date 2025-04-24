@@ -93,7 +93,7 @@ class DashboardScreen extends StatelessWidget {
                         CircleAvatar(
                           radius: 35,
                           backgroundImage: user.picture.isNotEmpty
-                              ? NetworkImage(user.picture)
+                              ? NetworkImage("http://192.168.122.49:8080/${user.picture}")
                               : const AssetImage("assets/profile.jpg") as ImageProvider,
                         ),
                         const SizedBox(width: 10),
@@ -112,7 +112,7 @@ class DashboardScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     // Location could be dynamic if available in user model
                     Text(
-                      "Mawasiliano, Dar es salaam",
+                      "Mawasiliano",
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: Colors.white,
@@ -151,7 +151,7 @@ class DashboardScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                user.bloodGroup,
+                                user.bloodGroup.isNotEmpty == true ? user.bloodGroup : "N/A",
                                 style: GoogleFonts.poppins(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
