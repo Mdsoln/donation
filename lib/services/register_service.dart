@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class RegisterService {
-  static const String _baseUrl = "http://192.168.28.49:8080/api/v1/donorapp";
+  static const String _baseUrl = "http://localhost:8080/api/v1/donor";
 
   Future<Map<String, dynamic>> registerDonor({
     required String fullName,

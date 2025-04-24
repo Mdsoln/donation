@@ -39,9 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', response.token);
       await prefs.setString('username', response.username);
-      await prefs.setString('roles', response.roles);
-      await prefs.setString('email', response.email);
-      await prefs.setString('phone', response.phone);
+      await prefs.setString('bloodGroup', response.bloodGroup);
+      await prefs.setInt('donations', response.donations);
+      await prefs.setString('picture', response.picture);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(response.message)),

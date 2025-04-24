@@ -1,4 +1,6 @@
 
+import 'appointment_card_model.dart';
+
 class AuthRequest {
   final String username;
   final String password;
@@ -21,46 +23,32 @@ class AuthResponse {
   final String message;
   final String token;
   final String username;
-  final String roles;
-  final String email;
-  final String phone;
-  final HospitalResponse? hospital;
+  final String bloodGroup;
+  final int donations;
+  final String picture;
+  final AppointmentCard? latestAppointment;
 
   AuthResponse({
     required this.message,
     required this.token,
     required this.username,
-    required this.roles,
-    required this.email,
-    required this.phone,
-    this.hospital,
+    required this.bloodGroup,
+    required this.donations,
+    required this.picture,
+    this.latestAppointment,
   });
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
     return AuthResponse(
-      message: json["message"] ?? "",
-      token: json["token"] ?? "",
-      username: json["username"] ?? "",
-      roles: json["roles"] ?? "",
-      email: json["email"] ?? "",
-      phone: json["phone"] ?? "",
-      hospital: json["hospital"] != null ? HospitalResponse.fromJson(json["hospital"]) : null,
-    );
-  }
-}
-
-class HospitalResponse {
-  final String name;
-  final String address;
-  final String city;
-
-  HospitalResponse({required this.name, required this.address, required this.city});
-
-  factory HospitalResponse.fromJson(Map<String, dynamic> json) {
-    return HospitalResponse(
-      name: json["name"] ?? "",
-      address: json["address"] ?? "",
-      city: json["city"] ?? "",
+      message: json['message'] ?? '',
+      token: json['token'] ?? '',
+      username: json['username'] ?? '',
+      bloodGroup: json['bloodGroup'] ?? '',
+      donations: json['donations'] ?? 0,
+      picture: json['picture'] ?? '',
+      latestAppointment: json['latestAppointment'] != null
+          ? AppointmentCard.fromJson(json['latestAppointment'])
+          : null,
     );
   }
 }
