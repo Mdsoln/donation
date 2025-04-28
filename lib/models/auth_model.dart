@@ -26,6 +26,12 @@ class AuthResponse {
   final String bloodGroup;
   final int donations;
   final String picture;
+  final String gender;
+  final String dateOfBirth;
+  final String mobile;
+  final double height;
+  final double weight;
+  final String lastDonation;
   final AppointmentCard? latestAppointment;
 
   AuthResponse({
@@ -35,6 +41,12 @@ class AuthResponse {
     required this.bloodGroup,
     required this.donations,
     required this.picture,
+    required this.gender,
+    required this.dateOfBirth,
+    required this.mobile,
+    required this.height,
+    required this.weight,
+    required this.lastDonation,
     this.latestAppointment,
   });
 
@@ -46,6 +58,12 @@ class AuthResponse {
       bloodGroup: json['bloodGroup'] ?? '',
       donations: json['donations'] ?? 0,
       picture: json['picture'] ?? '',
+      gender: json['gender'] ?? '',
+      dateOfBirth: json['dateOfBirth'] ?? '',
+      mobile: json['mobile'] ?? '',
+      height: json['height']?.toDouble() ?? 0.0,
+      weight: json['weight']?.toDouble() ?? 0.0,
+      lastDonation: json['lastDonation'] ?? '',
       latestAppointment: json['latestAppointment'] != null
           ? AppointmentCard.fromJson(json['latestAppointment'])
           : null,

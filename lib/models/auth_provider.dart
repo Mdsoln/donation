@@ -37,6 +37,11 @@ class AuthProvider with ChangeNotifier {
       await prefs.setString('bloodGroup', response.bloodGroup);
       await prefs.setInt('donations', response.donations);
       await prefs.setString('picture', response.picture);
+      await prefs.setString('gender', response.gender);
+      await prefs.setString('dateOfBirth', response.dateOfBirth);
+      await prefs.setString('mobile', response.mobile);
+      await prefs.setDouble('height', response.height);
+      await prefs.setDouble('weight', response.weight);
 
       _isLoading = false;
       notifyListeners();
@@ -68,7 +73,13 @@ class AuthProvider with ChangeNotifier {
         bloodGroup: prefs.getString('bloodGroup') ?? '',
         donations: prefs.getInt('donations') ?? 0,
         picture: prefs.getString('picture') ?? '',
-        latestAppointment: null, // You'll need to handle this separately
+        gender: prefs.getString('gender') ?? '',
+        dateOfBirth: prefs.getString('dateOfBirth') ?? '',
+        mobile: prefs.getString('mobile') ?? '',
+        height: prefs.getDouble('height') ?? 00.0,
+        weight: prefs.getDouble('weight') ?? 00.0,
+        lastDonation: prefs.getString('lastDonation') ?? '',
+        latestAppointment: null,
       );
       notifyListeners();
     }

@@ -66,84 +66,76 @@ class ProfileScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
-            const Text(
-              "Last Donation: Dec, 2024",
-              style: TextStyle(color: Colors.grey),
+            Text(
+              user.lastDonation,
+              style: const TextStyle(color: Colors.grey),
             ),
-
             const SizedBox(height: 10),
 
-            // Donations, Requests, Appointments
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                _InfoCard(title: "Donations", value: "08"),
+              children: [
+                _InfoCard(title: "Donations", value: "${user.donations}"),
                 _InfoCard(title: "Request", value: "03"),
                 _InfoCard(title: "Appointments", value: "01"),
               ],
             ),
-
             const SizedBox(height: 10),
 
-            // Gender & Blood Group
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   // Gender Section
                   _IconWithLabelRow(
                     icon: Icons.female,
                     label: "Gender",
-                    value: "Male",
+                    value: user.gender,
                     iconColor: Colors.pink,
                   ),
                   // Blood Group Section
                   _IconWithLabelRow(
                     icon: Icons.bloodtype,
                     label: "Blood Group",
-                    value: "A+",
+                    value: user.bloodGroup,
                     iconColor: Colors.red,
                   ),
                 ],
               ),
             ),
-
             const SizedBox(height: 20),
 
-            // Details Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
-                children: const [
-                  _DetailTile(icon: Icons.location_on, title: "Location", value: "Kijitonyama"),
-                  _DetailTile(icon: Icons.calendar_today, title: "Date of Birth", value: "03 Aug, 2002"),
-                  _DetailTile(icon: Icons.phone, title: "Phone Number", value: "+255717611117"),
-                  _DetailTile(icon: Icons.email, title: "Email Address", value: "muddyfakih98@gmail.com"),
+                children: [
+                  const _DetailTile(icon: Icons.location_on, title: "Location", value: "Mawasiliano"),
+                  _DetailTile(icon: Icons.calendar_today, title: "Date of Birth", value: user.dateOfBirth),
+                  _DetailTile(icon: Icons.phone, title: "Phone Number", value: user.mobile),
+                  const _DetailTile(icon: Icons.email, title: "Email Address", value: "muddyfakih98@gmail.com"),
                 ],
               ),
             ),
-
             const SizedBox(height: 20),
 
-            // Height & Weight
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   // Height Section
                   _IconWithLabelRow(
                     icon: Icons.height,
                     label: "Height",
-                    value: "59.2",
+                    value: "${user.height} cm",
                     iconColor: Colors.redAccent,
                   ),
                   // Weight Section
                   _IconWithLabelRow(
                     icon: Icons.fitness_center,
                     label: "Weight",
-                    value: "62",
+                    value: "${user.weight} kg",
                     iconColor: Colors.redAccent,
                   ),
                 ],

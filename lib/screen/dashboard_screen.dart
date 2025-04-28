@@ -27,22 +27,18 @@ class DashboardScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: AppDrawer(user: user), // Pass user to drawer
+      drawer: AppDrawer(user: user),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dynamic Header Section
             _buildHeaderSection(context, user),
 
-            // Dynamic Appointment Card (if exists)
             if (user.latestAppointment != null)
               _buildAppointmentCard(user.latestAppointment!),
 
-            // Quick Action Buttons
             _buildQuickActions(context),
 
-            // Blood Donation Banner
             _buildDonationBanner(),
           ],
         ),
@@ -64,7 +60,6 @@ class DashboardScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // App Bar with Menu
           Builder(
             builder: (context) => Row(
               children: [
