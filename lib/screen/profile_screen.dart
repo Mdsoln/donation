@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import '../models/auth_model.dart';
 import 'dashboard_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final AuthResponse user;
+
+  const ProfileScreen({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +35,35 @@ class ProfileScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 10),
-
-            // Profile Image
-            const CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage("assets/profile.jpg"),
+            CircleAvatar(
+              radius: 35,
+              backgroundColor: Colors.grey.shade200,
+              child: ClipOval(
+                child: user.picture.isNotEmpty
+                    ? Image.network(
+                  "http://192.168.1.194:8080/${user.picture}",
+                  width: 70,
+                  height: 70,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    // If the image fails, show a nice person icon
+                    return Icon(
+                      Icons.person,
+                      size: 50,
+                    );
+                  },
+                )
+                    : Icon(
+                  Icons.person,
+                  size: 50,
+                  color: Colors.grey.shade600,
+                ),
+              ),
             ),
-
             const SizedBox(height: 8),
-
-            // Name & Last Donation Date
-            const Text(
-              "Mdsoln",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              user.username,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             const Text(
@@ -153,7 +172,7 @@ class ProfileScreen extends StatelessWidget {
           } else if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              MaterialPageRoute(builder: (context) => ProfileScreen(user: user)),
             );
           }
         },
