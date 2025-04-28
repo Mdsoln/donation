@@ -488,90 +488,70 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          Container(
+            Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(20, 64, 20, 20),
-            height: 180,
             color: Colors.red.shade700,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Back Arrow Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-
-                Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProfileScreen(user: user),
-                            ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfileScreen(user: user),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 35,
+                    backgroundColor: Colors.grey.shade200,
+                    child: ClipOval(
+                      child: user.picture.isNotEmpty
+                          ? Image.network(
+                        "http://192.168.1.194:8080/${user.picture}",
+                        width: 70,
+                        height: 70,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.person,
+                            size: 50,
                           );
                         },
-                        child: CircleAvatar(
-                          radius: 35,
-                          backgroundColor: Colors.grey.shade200,
-                          child: ClipOval(
-                            child: user.picture.isNotEmpty
-                                ? Image.network(
-                              "http://192.168.1.194:8080/${user.picture}",
-                              width: 70,
-                              height: 70,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(
-                                  Icons.person,
-                                  size: 50,
-                                );
-                              },
-                            )
-                                : Icon(
-                              Icons.person,
-                              size: 50,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                        ),
+                      )
+                          : Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Colors.grey.shade600,
                       ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start, // Align text to start
-                        children: [
-                          Text(
-                            user.username,
-                            style: GoogleFonts.poppins(
-                              fontSize: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            "Profile",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      user.username,
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      "Profile",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
