@@ -91,10 +91,29 @@ class DashboardScreen extends StatelessWidget {
                     Row(
                       children: [
                         CircleAvatar(
-                          radius: 35,
-                          backgroundImage: user.picture.isNotEmpty
-                              ? NetworkImage("http://192.168.122.49:8080/${user.picture}")
-                              : const AssetImage("assets/profile.jpg") as ImageProvider,
+                        radius: 35,
+                          backgroundColor: Colors.grey.shade200,
+                          child: ClipOval(
+                            child: user.picture.isNotEmpty
+                                ? Image.network(
+                              "http://192.168.1.194:8080/${user.picture}",
+                              width: 70,
+                              height: 70,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                // If the image fails, show a nice person icon
+                                return Icon(
+                                  Icons.person,
+                                  size: 50,
+                                );
+                              },
+                            )
+                                : Icon(
+                              Icons.person,
+                              size: 50,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 10),
                         Flexible(
