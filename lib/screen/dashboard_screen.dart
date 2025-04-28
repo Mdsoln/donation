@@ -471,7 +471,7 @@ class DashboardScreen extends StatelessWidget {
           final user = Provider.of<AuthProvider>(context, listen: false).user;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ProfileScreen(/*user: user!*/)),
+            MaterialPageRoute(builder: (context) => ProfileScreen(user: user!)),
           );
         }
       },
@@ -496,59 +496,82 @@ class AppDrawer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Back Arrow Row
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () => Navigator.pop(context),
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProfileScreen(/*user: user*/),
-                              ),
-                            );
-                          },
-                          child: CircleAvatar(
-                            radius: 35,
-                            backgroundImage: user.picture.isNotEmpty
-                                ? NetworkImage(user.picture)
-                                : const AssetImage("assets/profile.jpg") as ImageProvider,
+                  ],
+                ),
+                const SizedBox(height: 6),
+
+                Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(user: user),
+                            ),
+                          );
+                        },
+                        child: CircleAvatar(
+                          radius: 35,
+                          backgroundColor: Colors.grey.shade200,
+                          child: ClipOval(
+                            child: user.picture.isNotEmpty
+                                ? Image.network(
+                              "http://192.168.1.194:8080/${user.picture}",
+                              width: 70,
+                              height: 70,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.person,
+                                  size: 50,
+                                );
+                              },
+                            )
+                                : Icon(
+                              Icons.person,
+                              size: 50,
+                              color: Colors.grey.shade600,
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              user.username,
-                              style: GoogleFonts.poppins(
-                                fontSize: 20,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                      ),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start, // Align text to start
+                        children: [
+                          Text(
+                            user.username,
+                            style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(height: 5),
-                            Text(
-                              "Blood Group: ${user.bloodGroup}",
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                color: Colors.white,
-                              ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            "Profile",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 15),
-                  ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
