@@ -1,11 +1,13 @@
 import 'package:donor_app/screen/slot_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../models/hospital_model.dart';
+import 'dart:math';
 
 
 class HospitalSelectionScreen extends StatefulWidget {
@@ -14,7 +16,7 @@ class HospitalSelectionScreen extends StatefulWidget {
 }
 
 class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
-  final String baseUrl = "http://192.168.122.49:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.218.49:8080/api/v1/donor";
 
   List<Hospital> hospitals = [];
   bool isLoading = true;
@@ -59,6 +61,20 @@ class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
     }
     return null;
   }
+
+  double _calculateDistanceKm(double lat1, double lon1, double lat2, double lon2) {
+    const double R = 6371; // Earth's radius in km
+    final double dLat = _degToRad(lat2 - lat1);
+    final double dLon = _degToRad(lon2 - lon1);
+
+    final double a =
+        sin(dLat / 2) * sin(dLat / 2) +
+            cos(_degToRad(lat1)) * cos(_degToRad(lat2)) *
+                sin(dLon / 2) * sin(dLon / 2);
+    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    return R * c;
+  }
+  double _degToRad(double deg) => deg * (pi / 180);
 
   Future<void> _getUserLocationAndHospitals() async {
     try {
@@ -111,7 +127,20 @@ class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         setState(() {
-          hospitals = data.map((json) => Hospital.fromJson(json)).toList();
+          hospitals = data.map((json) {
+            final h = Hospital.fromJson(json);
+            if (userPosition != null) {
+              h.distanceKm = _calculateDistanceKm(
+                userPosition!.latitude,
+                userPosition!.longitude,
+                h.latitude ?? 0.0,
+                h.longitude ?? 0.0,
+              );
+            }
+            return h;
+          }).toList();
+          //Sort by distance
+          hospitals.sort((a, b) => a.distanceKm!.compareTo(b.distanceKm!));
           isLoading = false;
         });
       } else {
@@ -129,57 +158,118 @@ class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text('Save Life Today'),
-        backgroundColor: Colors.red[700],
-        elevation: 0,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header Section
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Schedule Donation Appointment here',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Back button & title
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Select Your Nearby Center',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Save Life Today',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Schedule Donation Appointment here',
+                          style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(width: 40), // to balance arrow icon
+                ],
+              ),
             ),
-          ),
 
-          // Hospital List
-          Expanded(
-            child: isLoading
-                ? Center(child: CircularProgressIndicator())
-                : errorMessage.isNotEmpty
-                ? Center(child: Text(errorMessage))
-                : ListView.separated(
-              padding: EdgeInsets.only(bottom: 16),
-              itemCount: hospitals.length,
-              separatorBuilder: (context, index) => Divider(height: 1),
-              itemBuilder: (context, index) {
-                final hospital = hospitals[index];
-                return _buildHospitalTile(hospital, index);
-              },
+            // Location selector
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.location_on, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text(
+                      "Select Your Nearby Center",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
+            SizedBox(height: 10),
+
+            // Google Map
+            Container(
+              height: 180,
+              margin: EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: userPosition == null
+                  ? Center(child: Text("Loading map..."))
+                  : ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                      userPosition!.latitude,
+                      userPosition!.longitude,
+                    ),
+                    zoom: 13,
+                  ),
+                  markers: hospitals.map((h) {
+                    return Marker(
+                      markerId: MarkerId(h.hospitalId.toString()),
+                        position: LatLng(h.latitude ?? 0.0, h.longitude ?? 0.0),
+                      infoWindow: InfoWindow(title: h.hospitalName),
+                    );
+                  }).toSet(),
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+
+            // Hospital List
+            Expanded(
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : errorMessage.isNotEmpty
+                  ? Center(child: Text(errorMessage))
+                  : ListView.separated(
+                padding: EdgeInsets.only(bottom: 16),
+                itemCount: hospitals.length,
+                separatorBuilder: (context, index) => Divider(height: 1),
+                itemBuilder: (context, index) {
+                  final hospital = hospitals[index];
+                  return _buildHospitalTile(hospital, index);
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -220,6 +310,11 @@ class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
                     SizedBox(height: 4),
                     Text(hospital.hospitalAddress),
                     Text(hospital.hospitalCity),
+                    if (hospital.distanceKm != null)
+                      Text(
+                        '${hospital.distanceKm!.toStringAsFixed(1)} km away',
+                        style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                      ),
                     if (isNearby)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
