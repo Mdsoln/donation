@@ -7,6 +7,7 @@ class Hospital {
   final double? latitude;
   final double? longitude;
   final bool isNearby;
+  double? distanceKm;
 
   Hospital({
     required this.hospitalId,
@@ -16,6 +17,7 @@ class Hospital {
     this.latitude,
     this.longitude,
     this.isNearby = false,
+    this.distanceKm,
   });
 
   factory Hospital.fromJson(Map<String, dynamic> json) {
