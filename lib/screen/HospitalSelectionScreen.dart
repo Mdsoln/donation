@@ -1,4 +1,5 @@
 import 'package:donor_app/screen/slot_selection_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,6 +12,8 @@ import 'dart:math';
 
 
 class HospitalSelectionScreen extends StatefulWidget {
+  const HospitalSelectionScreen({super.key});
+
   @override
   _HospitalSelectionScreenState createState() => _HospitalSelectionScreenState();
 }
@@ -80,7 +83,9 @@ class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
     try {
      // Get cached location first
       userPosition = await _getCachedLocation();
-      print("User location: ${userPosition?.latitude}, ${userPosition?.longitude}");
+      if (kDebugMode) {
+        print("User location: ${userPosition?.latitude}, ${userPosition?.longitude}");
+      }
       // Get fresh location if possible
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (serviceEnabled) {
@@ -294,8 +299,8 @@ class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              Icon(Icons.local_hospital, color: Colors.red[700], size: 40),
-              SizedBox(width: 16),
+              /*Icon(Icons.local_hospital, color: Colors.red[700], size: 40),
+              SizedBox(width: 16),*/
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
