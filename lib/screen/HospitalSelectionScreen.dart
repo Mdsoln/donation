@@ -299,8 +299,6 @@ class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              /*Icon(Icons.local_hospital, color: Colors.red[700], size: 40),
-              SizedBox(width: 16),*/
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,7 +338,21 @@ class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
                   ],
                 ),
               ),
-              Icon(Icons.arrow_forward_ios, size: 16),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  'See Times',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
