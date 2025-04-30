@@ -91,7 +91,7 @@ class DashboardScreen extends StatelessWidget {
                           child: ClipOval(
                             child: user.picture.isNotEmpty
                                 ? Image.network(
-                              "http://192.168.1.194:8080/${user.picture}",
+                              "http://192.168.218.49:8080/${user.picture}",
                               width: 70,
                               height: 70,
                               fit: BoxFit.cover,
@@ -135,9 +135,7 @@ class DashboardScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               const SizedBox(width: 10),
-
               // Right Side: Blood Group and Donations
               Expanded(
                 flex: 1,
@@ -506,7 +504,7 @@ class AppDrawer extends StatelessWidget {
                     child: ClipOval(
                       child: user.picture.isNotEmpty
                           ? Image.network(
-                        "http://192.168.1.194:8080/${user.picture}",
+                        "http://192.168.218.49:8080/${user.picture}",
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
