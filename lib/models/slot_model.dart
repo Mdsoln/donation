@@ -23,7 +23,7 @@ class Slot {
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
       maxCapacity: json['maxCapacity'],
-      availableBookings: json['currentBookings'],
+      availableBookings: json['availableBookings'],
     );
   }
 
