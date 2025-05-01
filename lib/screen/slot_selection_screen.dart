@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -296,18 +297,23 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
       final donorId = decoded['userId'];
 
       final response = await http.post(
-        Uri.parse('$baseUrl/appointments'),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+        Uri.parse('$baseUrl/make-appointment'),
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            'Authorization': 'Bearer $token',
+          },
         body: json.encode({
           'hospitalId': widget.hospital.hospitalId,
           'slotId': selectedSlot.slotId,
           'donorId': donorId,
         }),
       );
-
+      if (kDebugMode) {
+        print("user ID: $donorId");
+        print("hospital ID: ${widget.hospital.hospitalId}");
+        print("slot ID: ${selectedSlot.slotId}");
+      }
       if (response.statusCode == 201) {
         // Success
         ScaffoldMessenger.of(context).showSnackBar(
@@ -318,7 +324,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
         );
         Navigator.pop(context); // Return to previous screen
       } else {
-        throw Exception('Failed to schedule appointment');
+        throw Exception(errorMessage);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -330,3 +336,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
     }
   }
 }
+//todo: displaying appointment details immediately after making an appointment with status pending as flag
+//todo: implementing the successfully screen after making an appointment
+//todo: reducing the space between the appointment card
+//todo: reimplementing the slot selection screen to follow the design
