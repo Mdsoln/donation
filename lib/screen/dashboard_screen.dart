@@ -242,7 +242,8 @@ class DashboardScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
+                Flexible(
+                  fit: FlexFit.tight,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -259,7 +260,9 @@ class DashboardScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
+                const SizedBox(width: 10), // spacing between columns
+                Flexible(
+                  fit: FlexFit.tight,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -278,11 +281,13 @@ class DashboardScreen extends StatelessWidget {
                       const SizedBox(height: 5),
                       Row(
                         children: [
-                          Text(
-                            "${appointment.date}\nTime: ${appointment.timeRange}",
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              color: Colors.grey.shade700,
+                          Flexible(
+                            child: Text(
+                              "${appointment.date}\nTime: ${appointment.timeRange}",
+                              style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                color: Colors.grey.shade700,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 5),
@@ -299,6 +304,7 @@ class DashboardScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 15),
+            // Bottom row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -331,7 +337,8 @@ class DashboardScreen extends StatelessWidget {
       ),
     );
   }
-  // Helper Widget: Countdown Box
+
+// Helper Widget: Countdown Box
   Widget _countdownBox(String number) {
     return Column(
       children: [
