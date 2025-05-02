@@ -322,14 +322,28 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
             backgroundColor: Colors.green,
           ),
         );
-        Navigator.pop(context); // Return to previous screen
+        Navigator.pop(context);
+      } if (response.statusCode == 201) {
+        // Success
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Appointment scheduled successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context);
       } else {
+        final errorData = json.decode(response.body);
+        final errorMessage = errorData['message'] ?? 'Unknown error occurred';
         throw Exception(errorMessage);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error scheduling appointment: ${e.toString()}'),
+          content: Text(
+            e.toString().replaceFirst('Exception: ', ''),
+            style: TextStyle(fontSize: 14),
+          ),
           backgroundColor: Colors.red,
         ),
       );
