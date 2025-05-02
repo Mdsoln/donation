@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/hospital_model.dart';
@@ -22,7 +24,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
   bool isLoading = true;
   String errorMessage = '';
   String? infoMessage;
-  final String baseUrl = "http://192.168.1.194:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.218.49:8080/api/v1/donor";
 
   @override
   void initState() {
@@ -261,7 +263,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
           ),
         ),
         onPressed: selectedSlotIndex != null
-            ? () => _scheduleAppointment()
+            ? () => _showConfirmationDialog()
             : null,
         child: Text(
           'Schedule Now',
@@ -270,6 +272,169 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showConfirmationDialog() {
+    final selectedSlot = availableSlots[selectedSlotIndex!];
+    final date = selectedSlot.startTime;
+    final formattedDate =
+        '${_formatDay(date)} ${date.day} ${_monthName(date.month)} ${date.year}';
+    final timeRange =
+        '${_formatTime(selectedSlot.startTime)} - ${_formatTime(selectedSlot.endTime)}';
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Your Appointment Is Scheduled As',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                _buildDetailRow('Center', widget.hospital.hospitalName),
+                _buildDetailRow('Location', widget.hospital.hospitalAddress),
+                _buildDetailRow('Distance', '${widget.hospital.distanceKm} km'),
+                _buildDetailRow('Time', '$formattedDate\n$timeRange'),
+
+                const SizedBox(height: 24),
+                Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _scheduleAppointment();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[700],
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        minimumSize: const Size(double.infinity, 48),
+                      ),
+                      child: const Text(
+                          'Confirm',
+                           style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Colors.grey),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        minimumSize: const Size(double.infinity, 48),
+                      ),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              '$label:',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _monthName(int month) {
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return months[month - 1];
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Lottie.asset('assets/animations/clap_animation.json', height: 120),
+            const SizedBox(height: 12),
+            const Text(
+              "Congratulation",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              "Your appointment has been scheduled successfully.",
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text("OKAY"),
+            ),
+          ],
         ),
       ),
     );
@@ -296,37 +461,44 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
       final donorId = decoded['userId'];
 
       final response = await http.post(
-        Uri.parse('$baseUrl/appointments'),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+        Uri.parse('$baseUrl/make-appointment'),
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            'Authorization': 'Bearer $token',
+          },
         body: json.encode({
           'hospitalId': widget.hospital.hospitalId,
           'slotId': selectedSlot.slotId,
           'donorId': donorId,
         }),
       );
-
+      if (kDebugMode) {
+        print("user ID: $donorId");
+        print("hospital ID: ${widget.hospital.hospitalId}");
+        print("slot ID: ${selectedSlot.slotId}");
+      }
       if (response.statusCode == 201) {
-        // Success
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Appointment scheduled successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pop(context); // Return to previous screen
+        _showSuccessDialog();
       } else {
-        throw Exception('Failed to schedule appointment');
+        final errorData = json.decode(response.body);
+        final errorMessage = errorData['message'] ?? 'Unknown error occurred';
+        throw Exception(errorMessage);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error scheduling appointment: ${e.toString()}'),
+          content: Text(
+            e.toString().replaceFirst('Exception: ', ''),
+            style: TextStyle(fontSize: 14),
+          ),
           backgroundColor: Colors.red,
         ),
       );
     }
   }
 }
+//todo: displaying appointment details immediately after making an appointment with status pending as flag
+//todo: implementing the successfully screen after making an appointment
+//todo: reducing the space between the appointment card
+//todo: reimplementing the slot selection screen to follow the design

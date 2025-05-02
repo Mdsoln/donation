@@ -91,7 +91,7 @@ class DashboardScreen extends StatelessWidget {
                           child: ClipOval(
                             child: user.picture.isNotEmpty
                                 ? Image.network(
-                              "http://192.168.1.194:8080/${user.picture}",
+                              "http://192.168.218.49:8080/${user.picture}",
                               width: 70,
                               height: 70,
                               fit: BoxFit.cover,
@@ -135,9 +135,7 @@ class DashboardScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               const SizedBox(width: 10),
-
               // Right Side: Blood Group and Donations
               Expanded(
                 flex: 1,
@@ -244,7 +242,8 @@ class DashboardScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
+                Flexible(
+                  fit: FlexFit.tight,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -261,7 +260,9 @@ class DashboardScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
+                const SizedBox(width: 10), // spacing between columns
+                Flexible(
+                  fit: FlexFit.tight,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -280,11 +281,13 @@ class DashboardScreen extends StatelessWidget {
                       const SizedBox(height: 5),
                       Row(
                         children: [
-                          Text(
-                            "${appointment.date}\nTime: ${appointment.timeRange}",
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              color: Colors.grey.shade700,
+                          Flexible(
+                            child: Text(
+                              "${appointment.date}\nTime: ${appointment.timeRange}",
+                              style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                color: Colors.grey.shade700,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 5),
@@ -301,6 +304,7 @@ class DashboardScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 15),
+            // Bottom row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -333,7 +337,8 @@ class DashboardScreen extends StatelessWidget {
       ),
     );
   }
-  // Helper Widget: Countdown Box
+
+// Helper Widget: Countdown Box
   Widget _countdownBox(String number) {
     return Column(
       children: [
@@ -506,7 +511,7 @@ class AppDrawer extends StatelessWidget {
                     child: ClipOval(
                       child: user.picture.isNotEmpty
                           ? Image.network(
-                        "http://192.168.1.194:8080/${user.picture}",
+                        "http://192.168.218.49:8080/${user.picture}",
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
