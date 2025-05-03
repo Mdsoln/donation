@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:donor_app/services/auth_service.dart';
+import 'package:donor_app/screen/auth/service/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth_model.dart';

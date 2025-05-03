@@ -1,5 +1,5 @@
 
-import 'appointment_card_model.dart';
+import '../../appointment/models/appointment_card_model.dart';
 
 class AuthRequest {
   final String username;

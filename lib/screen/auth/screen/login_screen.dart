@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/auth_provider.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/input_field.dart';
-import 'dashboard_screen.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/input_field.dart';
+import '../../profile/dashboard_screen.dart';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
 

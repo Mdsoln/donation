@@ -1,0 +1,180 @@
+
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+
+import '../auth/models/auth_model.dart';
+
+class EditProfileScreen extends StatefulWidget {
+  final AuthResponse user;
+  final Function(ProfileRequest) onSave;
+
+  const EditProfileScreen({
+    super.key,
+    required this.user,
+    required this.onSave,
+  });
+
+  @override
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneController;
+  late TextEditingController _birthDateController;
+  late TextEditingController _heightController;
+  late TextEditingController _weightController;
+
+  File? _imageFile;
+  String? _imagePath;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.user.username);
+    _emailController = TextEditingController(text: widget.user.email);
+    _phoneController = TextEditingController(text: widget.user.mobile);
+    _birthDateController = TextEditingController(text: widget.user.birthDate);
+    _heightController = TextEditingController(text: widget.user.height.toString());
+    _weightController = TextEditingController(text: widget.user.weight.toString());
+    _imagePath = widget.user.picture;
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _birthDateController.dispose();
+    _heightController.dispose();
+    _weightController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+        _imagePath = pickedFile.path;
+      });
+    }
+  }
+
+  void _saveChanges() {
+    if (_formKey.currentState!.validate()) {
+      final request = ProfileRequest(
+        fullname: _nameController.text,
+        email: _emailController.text,
+        phone: _phoneController.text,
+        birthdate: _parseBirthDate(_birthDateController.text),
+        height: double.tryParse(_heightController.text) ?? 0,
+        weight: double.tryParse(_weightController.text) ?? 0,
+        profileImage: _imageFile != null
+            ? MultipartFile.fromFileSync(_imageFile!.path)
+            : null,
+      );
+
+      widget.onSave(request);
+      Navigator.pop(context);
+    }
+  }
+
+  LocalDate? _parseBirthDate(String text) {
+    try {
+      return LocalDate.parse(text);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text('Edit Profile'),
+        actions: [
+          TextButton(
+            onPressed: _saveChanges,
+            child: const Text('SAVE', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: _pickImage,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: _imagePath != null
+                      ? (_imageFile != null
+                      ? FileImage(_imageFile!)
+                      : NetworkImage("http://192.168.1.194:8080/$_imagePath") as ImageProvider)
+                      : null,
+                  child: _imagePath == null && _imageFile == null
+                      ? const Icon(Icons.person, size: 50)
+                      : null,
+                ),
+              ),
+              const SizedBox(height: 20),
+              _buildTextField('Full name', _nameController),
+              _buildTextField('Email Address', _emailController),
+              _buildTextField('Phone number', _phoneController),
+              _buildTextField('Date of Birth', _birthDateController),
+              Row(
+                children: [
+                  Expanded(child: _buildTextField('Height', _heightController)),
+                  const SizedBox(width: 16),
+                  Expanded(child: _buildTextField('Weight', _weightController)),
+                ],
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: _saveChanges,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                child: const Text('Save changes'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter $label';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+}

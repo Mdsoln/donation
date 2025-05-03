@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../widgets/custom_button.dart';
-import '../widgets/input_field.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/input_field.dart';
 import 'reset_confirmation_screen.dart';
 
 

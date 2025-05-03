@@ -1,4 +1,4 @@
-import 'package:donor_app/screen/slot_selection_screen.dart';
+import 'package:donor_app/screen/appointment/screen/slot_selection_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -19,7 +19,7 @@ class HospitalSelectionScreen extends StatefulWidget {
 }
 
 class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
-  final String baseUrl = "http://192.168.218.49:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.1.194:8080/api/v1/donor";
 
   List<Hospital> hospitals = [];
   bool isLoading = true;

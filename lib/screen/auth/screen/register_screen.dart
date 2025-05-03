@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../services/register_service.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/input_field.dart';
+import '../service/register_service.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/input_field.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

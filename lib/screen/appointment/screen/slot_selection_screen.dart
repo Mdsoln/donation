@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/hospital_model.dart';
@@ -24,7 +23,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
   bool isLoading = true;
   String errorMessage = '';
   String? infoMessage;
-  final String baseUrl = "http://10.42.0.32:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.1.194:8080/api/v1/donor";
 
   @override
   void initState() {
@@ -74,8 +73,11 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Make a Schedule'),
-        backgroundColor: Colors.red[700],
+        title: Text(
+            'Make a Schedule',
+             style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
         elevation: 0,
       ),
       body: _buildBody(),
@@ -97,39 +99,32 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Hospital Info
-          Text(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+            Text(
             widget.hospital.hospitalName,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
+              color: Colors.red,
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            widget.hospital.hospitalAddress,
-            style: TextStyle(color: Colors.grey[600]),
-          ),
-          const SizedBox(height: 24),
-
-          // Available Slots Header
           Text(
             'Available Time Slots For Donation',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
+            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             'Select and Schedule the appointment',
             style: TextStyle(color: Colors.grey[600]),
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 24),
-
           // Slot List
           ListView.separated(
             shrinkWrap: true,
@@ -141,7 +136,6 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
             },
           ),
           const SizedBox(height: 24),
-
           // Schedule Now Button
           _buildScheduleButton(),
         ],
@@ -511,7 +505,6 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
     }
   }
 }
-//todo: displaying appointment details immediately after making an appointment with status pending as flag
-//todo: implementing the successfully screen after making an appointment
+//todo: displaying appointment details immediately after making an appointment with status pending as flagged as pending
 //todo: reducing the space between the appointment card
 //todo: reimplementing the slot selection screen to follow the design
