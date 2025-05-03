@@ -41,6 +41,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _nameController = TextEditingController(text: widget.user.username);
     _emailController = TextEditingController(text: widget.user.email);
     _genderController = TextEditingController(text: widget.user.gender);
+    _birthDateController = TextEditingController(text: widget.user.dateOfBirth);
     _phoneController = TextEditingController(text: widget.user.mobile);
     _heightController = TextEditingController(text: widget.user.height.toString());
     _weightController = TextEditingController(text: widget.user.weight.toString());
