@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:donor_app/screen/auth/service/auth_service.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth_model.dart';
@@ -66,10 +67,13 @@ class AuthProvider with ChangeNotifier {
 
     if (token != null) {
       _token = token;
+      final decoded = JwtDecoder.decode(token);
+      final email = decoded['sub'];
       _user = AuthResponse(
         message: '',
         token: token,
         username: prefs.getString('username') ?? '',
+        email: email,
         bloodGroup: prefs.getString('bloodGroup') ?? '',
         donations: prefs.getInt('donations') ?? 0,
         picture: prefs.getString('picture') ?? '',

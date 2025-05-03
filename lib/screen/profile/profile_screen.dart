@@ -1,11 +1,30 @@
+import 'package:donor_app/screen/profile/service/update_profile_service.dart';
 import 'package:flutter/material.dart';
 import '../auth/models/auth_model.dart';
+import 'EditProfileScreen.dart';
 import 'dashboard_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final AuthResponse user;
 
   const ProfileScreen({super.key, required this.user});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  late AuthResponse user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user;
+  }
+
+  Future<void> _refreshProfile() async {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +45,33 @@ class ProfileScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditProfileScreen(
+                    user: user,
+                    onSave: (request) async {
+                      try{
+                        final updateProfileAPI = UpdateProfile();
+                        await updateProfileAPI.updateProfile(request);
+                        await _refreshProfile();
+                      }catch(e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              e.toString().replaceFirst('Exception: ', ''),
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -164,7 +209,7 @@ class ProfileScreen extends StatelessWidget {
           } else if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfileScreen(user: user)),
+              MaterialPageRoute(builder: (context) => ProfileScreen(user: user,)),
             );
           }
         },
