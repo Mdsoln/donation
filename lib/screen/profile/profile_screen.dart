@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/auth_model.dart';
+import '../auth/models/auth_model.dart';
 import 'dashboard_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -41,7 +41,7 @@ class ProfileScreen extends StatelessWidget {
               child: ClipOval(
                 child: user.picture.isNotEmpty
                     ? Image.network(
-                  "http://192.168.218.49:8080/${user.picture}",
+                  "http://192.168.1.194:8080/${user.picture}",
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,

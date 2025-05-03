@@ -1,15 +1,15 @@
-import 'package:donor_app/screen/profile_screen.dart';
-import 'package:donor_app/screen/urgent_request_screen.dart';
+import 'package:donor_app/screen/profile/profile_screen.dart';
+import 'package:donor_app/screen/donation/urgent_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../models/appointment_card_model.dart';
-import '../models/auth_model.dart';
-import '../models/auth_provider.dart';
-import 'HospitalSelectionScreen.dart';
-import 'donation_history_screen.dart';
-import 'login_screen.dart';
+import '../appointment/models/appointment_card_model.dart';
+import '../auth/models/auth_model.dart';
+import '../auth/models/auth_provider.dart';
+import '../appointment/screen/HospitalSelectionScreen.dart';
+import '../donation/donation_history_screen.dart';
+import '../auth/screen/login_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -91,7 +91,7 @@ class DashboardScreen extends StatelessWidget {
                           child: ClipOval(
                             child: user.picture.isNotEmpty
                                 ? Image.network(
-                              "http://10.42.0.32:8080/${user.picture}",
+                              "http://192.168.1.194:8080/${user.picture}",
                               width: 70,
                               height: 70,
                               fit: BoxFit.cover,
@@ -511,7 +511,7 @@ class AppDrawer extends StatelessWidget {
                     child: ClipOval(
                       child: user.picture.isNotEmpty
                           ? Image.network(
-                        "http://10.42.0.32:8080/${user.picture}",
+                        "http://192.168.1.194:8080/${user.picture}",
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
