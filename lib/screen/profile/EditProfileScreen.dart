@@ -1,11 +1,11 @@
 
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../auth/models/auth_model.dart';
+import 'module/profile_request.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final AuthResponse user;
@@ -24,6 +24,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
+  late TextEditingController _genderController;
   late TextEditingController _phoneController;
   late TextEditingController _birthDateController;
   late TextEditingController _heightController;
@@ -32,14 +33,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File? _imageFile;
   String? _imagePath;
   final _formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.user.username);
     _emailController = TextEditingController(text: widget.user.email);
+    _genderController = TextEditingController(text: widget.user.gender);
     _phoneController = TextEditingController(text: widget.user.mobile);
-    _birthDateController = TextEditingController(text: widget.user.birthDate);
     _heightController = TextEditingController(text: widget.user.height.toString());
     _weightController = TextEditingController(text: widget.user.weight.toString());
     _imagePath = widget.user.picture;
@@ -57,7 +59,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
@@ -71,13 +73,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final request = ProfileRequest(
         fullname: _nameController.text,
         email: _emailController.text,
+        gender: _genderController.text,
         phone: _phoneController.text,
         birthdate: _parseBirthDate(_birthDateController.text),
         height: double.tryParse(_heightController.text) ?? 0,
         weight: double.tryParse(_weightController.text) ?? 0,
-        profileImage: _imageFile != null
-            ? MultipartFile.fromFileSync(_imageFile!.path)
-            : null,
+        profileImage: _imageFile,
       );
 
       widget.onSave(request);
@@ -85,9 +86,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  LocalDate? _parseBirthDate(String text) {
+  DateTime? _parseBirthDate(String text) {
     try {
-      return LocalDate.parse(text);
+      return DateTime.parse(text);
     } catch (e) {
       return null;
     }

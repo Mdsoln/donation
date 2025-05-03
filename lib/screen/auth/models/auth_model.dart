@@ -23,6 +23,7 @@ class AuthResponse {
   final String message;
   final String token;
   final String username;
+  final String email;
   final String bloodGroup;
   final int donations;
   final String picture;
@@ -38,6 +39,7 @@ class AuthResponse {
     required this.message,
     required this.token,
     required this.username,
+    required this.email,
     required this.bloodGroup,
     required this.donations,
     required this.picture,
@@ -55,6 +57,7 @@ class AuthResponse {
       message: json['message'] ?? '',
       token: json['token'] ?? '',
       username: json['username'] ?? '',
+      email: json['email'] ?? '',
       bloodGroup: json['bloodGroup'] ?? '',
       donations: json['donations'] ?? 0,
       picture: json['picture'] ?? '',
