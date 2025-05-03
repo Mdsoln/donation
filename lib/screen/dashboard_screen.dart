@@ -91,7 +91,7 @@ class DashboardScreen extends StatelessWidget {
                           child: ClipOval(
                             child: user.picture.isNotEmpty
                                 ? Image.network(
-                              "http://192.168.218.49:8080/${user.picture}",
+                              "http://10.42.0.32:8080/${user.picture}",
                               width: 70,
                               height: 70,
                               fit: BoxFit.cover,
@@ -444,7 +444,7 @@ class DashboardScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: Image.asset("assets/blood_donation.jpg", fit: BoxFit.cover),
+        child: Image.asset("assets/images/donation_banner.png", fit: BoxFit.cover),
       ),
     );
   }
@@ -511,7 +511,7 @@ class AppDrawer extends StatelessWidget {
                     child: ClipOval(
                       child: user.picture.isNotEmpty
                           ? Image.network(
-                        "http://192.168.218.49:8080/${user.picture}",
+                        "http://10.42.0.32:8080/${user.picture}",
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
