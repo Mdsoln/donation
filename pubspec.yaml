@@ -39,6 +39,7 @@ flutter:
   # Asset Images
   assets:
     - assets/images/drop.jpeg
+    - assets/images/donation_banner.png
     - assets/animation/ezgif.com-crop.gif
     - assets/animation/ezgif.com-resize.gif
 
