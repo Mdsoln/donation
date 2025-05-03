@@ -24,7 +24,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
   bool isLoading = true;
   String errorMessage = '';
   String? infoMessage;
-  final String baseUrl = "http://192.168.218.49:8080/api/v1/donor";
+  final String baseUrl = "http://10.42.0.32:8080/api/v1/donor";
 
   @override
   void initState() {
@@ -290,6 +290,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
       barrierDismissible: false,
       builder: (context) {
         return Dialog(
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
@@ -401,14 +402,23 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Lottie.asset('assets/animations/clap_animation.json', height: 120),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.6,
+              ),
+              child: Image.asset(
+                'assets/animation/ezgif.com-resize.gif',
+                fit: BoxFit.contain,
+              ),
+            ),
             const SizedBox(height: 12),
             const Text(
-              "Congratulation",
+              "Congratulations",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -432,7 +442,10 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text("OKAY"),
+              child: const Text(
+                  "OKAY",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
