@@ -39,6 +39,8 @@ flutter:
   # Asset Images
   assets:
     - assets/images/drop.jpeg
+    - assets/animation/ezgif.com-crop.gif
+    - assets/animation/ezgif.com-resize.gif
 
   # Custom Fonts
   fonts:
