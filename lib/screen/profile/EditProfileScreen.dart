@@ -52,6 +52,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _genderController.dispose();
     _phoneController.dispose();
     _birthDateController.dispose();
     _heightController.dispose();
@@ -100,13 +101,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Edit Profile'),
-        actions: [
-          TextButton(
-            onPressed: _saveChanges,
-            child: const Text('SAVE', style: TextStyle(color: Colors.red)),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
           ),
-        ],
+        title: const Text(
+          "Edit Profile",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -121,7 +126,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundImage: _imagePath != null
                       ? (_imageFile != null
                       ? FileImage(_imageFile!)
-                      : NetworkImage("http://192.168.1.194:8080/$_imagePath") as ImageProvider)
+                      : NetworkImage("http://192.168.236.49:8080/$_imagePath") as ImageProvider)
                       : null,
                   child: _imagePath == null && _imageFile == null
                       ? const Icon(Icons.person, size: 50)
@@ -131,6 +136,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const SizedBox(height: 20),
               _buildTextField('Full name', _nameController),
               _buildTextField('Email Address', _emailController),
+              _buildTextField('Gender', _genderController),
               _buildTextField('Phone number', _phoneController),
               _buildTextField('Date of Birth', _birthDateController),
               Row(
@@ -150,7 +156,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   minimumSize: const Size(double.infinity, 50),
                 ),
-                child: const Text('Save changes'),
+                child: const Text(
+                  'Save changes',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ],
           ),
