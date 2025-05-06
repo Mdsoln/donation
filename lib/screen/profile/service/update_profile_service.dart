@@ -10,31 +10,45 @@ import '../module/profile_response.dart';
 
 class UpdateProfile{
 
-  final String baseUrl = "http://192.168.1.194:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.21.49:8080/api/v1/donor";
 
   Future<ProfileResponse> updateProfile(ProfileRequest request) async {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
-      final decoded = JwtDecoder.decode(token!);
-      final donorId = decoded['userId'];
-      final String url = "$baseUrl/$donorId/update-profile";
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final decoded = JwtDecoder.decode(token!);
+    final donorId = decoded['userId'];
+    final String url = "$baseUrl/$donorId/update-profile";
 
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(request.toJson()),
+    final uri = Uri.parse(url);
+    final multipartRequest = http.MultipartRequest('POST', uri);
+
+    multipartRequest.headers['Authorization'] = 'Bearer $token';
+
+    multipartRequest.fields['fullname'] = request.fullname;
+    multipartRequest.fields['email'] = request.email;
+    multipartRequest.fields['phone'] = request.phone;
+    multipartRequest.fields['gender'] = request.gender;
+    multipartRequest.fields['birthdate'] = request.birthdate!.toIso8601String();
+    multipartRequest.fields['height'] = request.height.toString();
+    multipartRequest.fields['weight'] = request.weight.toString();
+
+    if (request.profileImage != null) {
+      multipartRequest.files.add(
+        await http.MultipartFile.fromPath('profileImage', request.profileImage!.path),
       );
-      if (response.statusCode == 201) {
-        final data = json.decode(response.body);
-        return ProfileResponse.fromJson(data);
-      } else {
-        final errorData = json.decode(response.body);
-        final errorMessage = errorData['message'] ?? 'Unknown error occurred';
-        throw Exception(errorMessage);
-      }
+    }
+
+    final streamedResponse = await multipartRequest.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = json.decode(response.body);
+      return ProfileResponse.fromJson(data);
+    } else {
+      final errorData = json.decode(response.body);
+      final errorMessage = errorData['message'] ?? 'Unknown error occurred';
+      throw Exception(errorMessage);
+    }
   }
+
 }
