@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import '../auth/models/auth_model.dart';
 import 'module/profile_request.dart';
 
+import 'package:intl/intl.dart';
+
 class EditProfileScreen extends StatefulWidget {
   final AuthResponse user;
   final Function(ProfileRequest) onSave;
@@ -89,12 +91,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   DateTime? _parseBirthDate(String text) {
-    try {
-      return DateTime.parse(text);
-    } catch (e) {
-      return null;
+    final formats = [
+      DateFormat("dd MMM, yyyy"),       // e.g., "03 Aug, 2002"
+      DateFormat("dd MMMM, yyyy"),      // e.g., "03 August, 2002"
+      DateFormat("yyyy-MM-dd"),         // in case it's already ISO
+    ];
+
+    for (final format in formats) {
+      try {
+        return format.parseStrict(text);
+      } catch (_) {}
     }
+
+    return null; // If all formats fail
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +137,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundImage: _imagePath != null
                       ? (_imageFile != null
                       ? FileImage(_imageFile!)
-                      : NetworkImage("http://192.168.236.49:8080/$_imagePath") as ImageProvider)
+                      : NetworkImage("http://192.168.21.49:8080/$_imagePath") as ImageProvider)
                       : null,
                   child: _imagePath == null && _imageFile == null
                       ? const Icon(Icons.person, size: 50)

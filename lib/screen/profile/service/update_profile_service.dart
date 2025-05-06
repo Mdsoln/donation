@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:donor_app/screen/profile/module/profile_request.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +16,10 @@ class UpdateProfile{
   Future<ProfileResponse> updateProfile(ProfileRequest request) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final decoded = JwtDecoder.decode(token!);
+    if (token == null) {
+      throw Exception("No token found in SharedPreferences");
+    }
+    final decoded = JwtDecoder.decode(token);
     final donorId = decoded['userId'];
     final String url = "$baseUrl/$donorId/update-profile";
 
@@ -28,11 +32,11 @@ class UpdateProfile{
     multipartRequest.fields['email'] = request.email;
     multipartRequest.fields['phone'] = request.phone;
     multipartRequest.fields['gender'] = request.gender;
-    multipartRequest.fields['birthdate'] = request.birthdate!.toIso8601String();
+    multipartRequest.fields['birthdate'] = DateFormat('yyyy-MM-dd').format(request.birthdate!);
     multipartRequest.fields['height'] = request.height.toString();
     multipartRequest.fields['weight'] = request.weight.toString();
 
-    if (request.profileImage != null) {
+    if (request.profileImage != null && request.profileImage!.path.isNotEmpty) {
       multipartRequest.files.add(
         await http.MultipartFile.fromPath('profileImage', request.profileImage!.path),
       );
