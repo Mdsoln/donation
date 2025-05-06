@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:donor_app/screen/profile/module/profile_request.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,8 +38,27 @@ class UpdateProfile{
     multipartRequest.fields['weight'] = request.weight.toString();
 
     if (request.profileImage != null && request.profileImage!.path.isNotEmpty) {
+      final extension = request.profileImage!.path.split('.').last.toLowerCase();
+      MediaType? mediaType;
+
+      switch (extension) {
+        case 'jpg':
+        case 'jpeg':
+          mediaType = MediaType('image', 'jpeg');
+          break;
+        case 'png':
+          mediaType = MediaType('image', 'png');
+          break;
+        default:
+          throw Exception('Unsupported image format');
+      }
+
       multipartRequest.files.add(
-        await http.MultipartFile.fromPath('profileImage', request.profileImage!.path),
+        await http.MultipartFile.fromPath(
+          'profileImage',
+          request.profileImage!.path,
+          contentType: mediaType,
+        ),
       );
     }
 
