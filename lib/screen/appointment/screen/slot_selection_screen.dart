@@ -23,7 +23,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
   bool isLoading = true;
   String errorMessage = '';
   String? infoMessage;
-  final String baseUrl = "http://192.168.1.194:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.21.49:8080/api/v1/donor";
 
   @override
   void initState() {
@@ -505,6 +505,3 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
     }
   }
 }
-//todo: displaying appointment details immediately after making an appointment with status pending as flagged as pending
-//todo: reducing the space between the appointment card
-//todo: reimplementing the slot selection screen to follow the design
