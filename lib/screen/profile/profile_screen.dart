@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: ClipOval(
                 child: user.picture.isNotEmpty
                     ? Image.network(
-                  "http://192.168.21.49:8080/${user.picture}",
+                  "http://192.168.1.194:8080/${user.picture}",
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
@@ -158,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const _DetailTile(icon: Icons.location_on, title: "Location", value: "Mawasiliano"),
                   _DetailTile(icon: Icons.calendar_today, title: "Date of Birth", value: user.dateOfBirth),
                   _DetailTile(icon: Icons.phone, title: "Phone Number", value: user.mobile),
-                  const _DetailTile(icon: Icons.email, title: "Email Address", value: "muddyfakih98@gmail.com"),
+                  _DetailTile(icon: Icons.email, title: "Email Address", value: user.email),
                 ],
               ),
             ),

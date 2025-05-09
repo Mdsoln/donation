@@ -12,7 +12,7 @@ import '../module/profile_response.dart';
 
 class UpdateProfile{
 
-  final String baseUrl = "http://192.168.21.49:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.1.194:8080/api/v1/donor";
 
   Future<ProfileResponse> updateProfile(ProfileRequest request) async {
     final prefs = await SharedPreferences.getInstance();
