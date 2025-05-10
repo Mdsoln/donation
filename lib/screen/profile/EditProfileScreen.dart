@@ -23,6 +23,11 @@ class EditProfileScreen extends StatefulWidget {
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
+final List<String> _genders = ['Select gender', 'Male', 'Female'];
+String _selectedGender = 'Select gender';
+
+DateTime? _selectedDate;
+
 class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
@@ -147,9 +152,71 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const SizedBox(height: 20),
               _buildTextField('Full name', _nameController),
               _buildTextField('Email Address', _emailController),
-              _buildTextField('Gender', _genderController),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: DropdownButtonFormField<String>(
+                  value: _selectedGender,
+                  decoration: InputDecoration(
+                    labelText: 'Gender',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  items: _genders
+                      .map((gender) => DropdownMenuItem(
+                    value: gender,
+                    child: Text(gender),
+                  ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedGender = value!;
+                      _genderController.text = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select gender';
+                    }
+                    return null;
+                  },
+                ),
+              ),
               _buildTextField('Phone number', _phoneController),
-              _buildTextField('Date of Birth', _birthDateController),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: TextFormField(
+                  controller: _birthDateController,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Date of Birth',
+                    hintText: 'Select your date of birth',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: _selectedDate ?? DateTime(2000),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    );
+                    if (pickedDate != null) {
+                      setState(() {
+                        _selectedDate = pickedDate;
+                        _birthDateController.text = "${pickedDate.toLocal()}".split(' ')[0];
+                      });
+                    }
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select your birth date';
+                    }
+                    return null;
+                  },
+                ),
+              ),
               Row(
                 children: [
                   Expanded(child: _buildTextField('Height', _heightController)),
