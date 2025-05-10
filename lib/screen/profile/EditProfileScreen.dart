@@ -137,7 +137,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundImage: _imagePath != null
                       ? (_imageFile != null
                       ? FileImage(_imageFile!)
-                      : NetworkImage("http://192.168.1.194:8080/$_imagePath") as ImageProvider)
+                      : NetworkImage("http://192.168.1.194:8080/images/$_imagePath") as ImageProvider)
                       : null,
                   child: _imagePath == null && _imageFile == null
                       ? const Icon(Icons.person, size: 50)
