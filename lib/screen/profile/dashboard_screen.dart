@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../appointment/models/appointment_card_model.dart';
 import '../auth/models/auth_model.dart';
 import '../auth/models/auth_provider.dart';
-import '../appointment/screen/HospitalSelectionScreen.dart';
+import '../appointment/screen/hospital_selection_screen.dart';
 import '../donation/donation_history_screen.dart';
 import '../auth/screen/login_screen.dart';
 
