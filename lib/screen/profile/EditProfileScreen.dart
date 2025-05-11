@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 import '../auth/models/auth_model.dart';
 import 'module/profile_request.dart';
@@ -154,20 +155,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               _buildTextField('Email Address', _emailController),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: DropdownButtonFormField<String>(
+                child: DropdownButtonFormField2<String>(
                   value: _selectedGender,
                   decoration: InputDecoration(
                     labelText: 'Gender',
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blueAccent, width: 1.5),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue, width: 2),
+                    ),
                   ),
-                  items: _genders
-                      .map((gender) => DropdownMenuItem(
-                    value: gender,
-                    child: Text(gender),
-                  ))
-                      .toList(),
+                  hint: const Icon(Icons.keyboard_arrow_down),
+                  style: const TextStyle(color: Colors.black, fontSize: 16),
+                  dropdownStyleData: DropdownStyleData(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    maxHeight: 180,
+                    width: 360, // << control the dropdown width here
+                    offset: const Offset(0, -5),
+                  ),
+                  items: _genders.map((gender) {
+                    return DropdownMenuItem(
+                      value: gender,
+                      child: Text(
+                        gender,
+                        style: TextStyle(
+                          color: gender == 'Select gender' ? Colors.grey : Colors.black,
+                          fontWeight: gender == 'Select gender' ? FontWeight.w400 : FontWeight.w500,
+                        ),
+                      ),
+                    );
+                  }).toList(),
                   onChanged: (value) {
                     setState(() {
                       _selectedGender = value!;
@@ -175,8 +204,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     });
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select gender';
+                    if (value == null || value == 'Select gender') {
+                      return 'Please select a gender';
                     }
                     return null;
                   },
