@@ -4,8 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../models/appointment_response.dart';
 import '../models/hospital_model.dart';
 import '../models/slot_model.dart';
+import 'appointment_list_details.dart';
 
 
 class SlotSelectionScreen extends StatefulWidget {
@@ -23,7 +25,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
   bool isLoading = true;
   String errorMessage = '';
   String? infoMessage;
-  final String baseUrl = "http://192.168.1.194:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.179.49:8080/api/v1/donor";
 
   @override
   void initState() {
@@ -391,7 +393,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
     return months[month - 1];
   }
 
-  void _showSuccessDialog() {
+  void _showSuccessDialog({required VoidCallback onOkay}) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -428,7 +430,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pop(context);
+                onOkay();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
@@ -486,7 +488,18 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
         print("slot ID: ${selectedSlot.slotId}");
       }
       if (response.statusCode == 201) {
-        _showSuccessDialog();
+        final jsonData = json.decode(response.body);
+        final appointmentResponse = AppointmentResponse.fromJson(jsonData);
+        _showSuccessDialog(onOkay: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) => MyAppointmentScreen(
+                response: appointmentResponse,
+              ),
+            ),
+          );
+        });
+
       } else {
         final errorData = json.decode(response.body);
         final errorMessage = errorData['message'] ?? 'Unknown error occurred';

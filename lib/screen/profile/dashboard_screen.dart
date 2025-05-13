@@ -91,7 +91,7 @@ class DashboardScreen extends StatelessWidget {
                           child: ClipOval(
                             child: user.picture.isNotEmpty
                                 ? Image.network(
-                              "http://192.168.1.194:8080/images/${user.picture}",
+                              "http://192.168.179.49:8080/images/${user.picture}",
                               width: 70,
                               height: 70,
                               fit: BoxFit.cover,
@@ -126,7 +126,7 @@ class DashboardScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     // Location could be dynamic if available in user model
                     Text(
-                      "Mawasiliano",
+                      "Kijichonyama",
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: Colors.white,
@@ -511,7 +511,7 @@ class AppDrawer extends StatelessWidget {
                     child: ClipOval(
                       child: user.picture.isNotEmpty
                           ? Image.network(
-                        "http://192.168.1.194:8080/images/${user.picture}",
+                        "http://192.168.179.49:8080/images/${user.picture}",
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
