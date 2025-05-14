@@ -1,6 +1,6 @@
 import 'package:donor_app/screen/profile/service/update_profile_service.dart';
 import 'package:flutter/material.dart';
-import '../auth/models/auth_model.dart';
+import '../../auth/models/auth_model.dart';
 import 'EditProfileScreen.dart';
 import 'dashboard_screen.dart';
 

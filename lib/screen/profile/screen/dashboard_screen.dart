@@ -1,15 +1,16 @@
-import 'package:donor_app/screen/profile/profile_screen.dart';
+import 'package:donor_app/screen/appointment/screen/appointment_list_details.dart';
+import 'package:donor_app/screen/profile/screen/profile_screen.dart';
 import 'package:donor_app/screen/donation/urgent_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../appointment/models/appointment_card_model.dart';
-import '../auth/models/auth_model.dart';
-import '../auth/models/auth_provider.dart';
-import '../appointment/screen/hospital_selection_screen.dart';
-import '../donation/donation_history_screen.dart';
-import '../auth/screen/login_screen.dart';
+import '../../appointment/models/appointment_card_model.dart';
+import '../../auth/models/auth_model.dart';
+import '../../auth/models/auth_provider.dart';
+import '../../appointment/screen/hospital_selection_screen.dart';
+import '../../donation/donation_history_screen.dart';
+import '../../auth/screen/login_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -399,7 +400,7 @@ class DashboardScreen extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         children: [
           _actionButton(
-            "Find Donation Center",
+            "Donation Guidelines",
             Icons.location_on,
             context,
                 () => Navigator.push(
@@ -511,7 +512,7 @@ class AppDrawer extends StatelessWidget {
                     child: ClipOval(
                       child: user.picture.isNotEmpty
                           ? Image.network(
-                        "http://192.168.179.49:8080/images/${user.picture}",
+                        "http://192.168.179.217:8080/images/${user.picture}",
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
@@ -568,7 +569,11 @@ class AppDrawer extends StatelessWidget {
                   );
                 }),
                 _buildDrawerItem(Icons.calendar_today, "My Appointment", () {
-                  // Handle navigation to appointments
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyAppointmentScreen()),
+                  );
                 }),
                 _buildDrawerItem(Icons.history, "Donation History", () {
                   Navigator.pop(context);

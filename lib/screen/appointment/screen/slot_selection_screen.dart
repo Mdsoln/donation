@@ -1,11 +1,9 @@
-import 'package:donor_app/screen/appointment/service/appointment_summary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import '../models/appointment_response.dart';
 import '../models/hospital_model.dart';
 import '../models/slot_model.dart';
 import 'appointment_list_details.dart';
@@ -431,31 +429,12 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
             ElevatedButton(
               onPressed: () async {
                 Navigator.pop(context);
-
-                final prefs = await SharedPreferences.getInstance();
-                final token = prefs.getString('token')!;
-                final decoded = JwtDecoder.decode(token);
-                final donorId = decoded['userId'].toString();
-
-                try{
-                  final api = AppointmentHistoryAPI();
-                  final response = await api.fetchAppointments(donorId, token);
-                  if (!mounted) return;
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => MyAppointmentScreen(response: response),
-                    ),
-                  );
-                }catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed to load appointments'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => MyAppointmentScreen(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,

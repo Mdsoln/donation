@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-import '../auth/models/auth_model.dart';
-import 'module/profile_request.dart';
+import '../../auth/models/auth_model.dart';
+import '../module/profile_request.dart';
 
 import 'package:intl/intl.dart';
 
