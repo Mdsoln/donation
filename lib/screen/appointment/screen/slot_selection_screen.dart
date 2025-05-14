@@ -26,7 +26,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
   bool isLoading = true;
   String errorMessage = '';
   String? infoMessage;
-  final String baseUrl = "http://192.168.179.49:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.179.217:8080/api/v1/donor";
 
   @override
   void initState() {
@@ -394,7 +394,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
     return months[month - 1];
   }
 
-  void _showSuccessDialog({required VoidCallback onOkay}) {
+  void _showSuccessDialog() {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -513,18 +513,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
         print("slot ID: ${selectedSlot.slotId}");
       }
       if (response.statusCode == 201) {
-        final jsonData = json.decode(response.body);
-        final appointmentResponse = AppointmentResponse.fromJson(jsonData);
-        _showSuccessDialog(onOkay: () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => MyAppointmentScreen(
-                response: appointmentResponse,
-              ),
-            ),
-          );
-        });
-
+        _showSuccessDialog();
       } else {
         final errorData = json.decode(response.body);
         final errorMessage = errorData['message'] ?? 'Unknown error occurred';
