@@ -1,3 +1,4 @@
+import 'package:donor_app/screen/appointment/service/appointment_summary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -428,9 +429,33 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.pop(context);
-                onOkay();
+
+                final prefs = await SharedPreferences.getInstance();
+                final token = prefs.getString('token')!;
+                final decoded = JwtDecoder.decode(token);
+                final donorId = decoded['userId'].toString();
+
+                try{
+                  final api = AppointmentHistoryAPI();
+                  final response = await api.fetchAppointments(donorId, token);
+                  if (!mounted) return;
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MyAppointmentScreen(response: response),
+                    ),
+                  );
+                }catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to load appointments'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
