@@ -59,9 +59,18 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
               decoration: InputDecoration(
                 labelText: widget.labelText,
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Colors.grey.shade100,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(widget.borderRadius),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  borderSide: const BorderSide(color: Colors.blue, width: 2),
                 ),
               ),
               hint: widget.hint ?? const Icon(Icons.keyboard_arrow_down),
