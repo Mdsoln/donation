@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../widgets/drop_down_field.dart';
 import '../service/register_service.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/input_field.dart';
@@ -14,9 +15,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? _selectedAge;
   bool isLoading = false;
 
   String? _validateFullName(String? value) {
@@ -61,6 +64,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: emailController.text,
         phone: phoneController.text,
         password: passwordController.text,
+        ageGroup: ageController.text,
       );
 
       if (response['success'] == true) {
@@ -138,6 +142,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     keyboardType: TextInputType.phone,
                   ),
                   const SizedBox(height: 16),
+                  CustomDropdown<String>(
+                    labelText: 'Age',
+                    items: ['18-20', '21-30', '31-40', '41-50', '51-65'],
+                    value: _selectedAge,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedAge = value!;
+                        ageController.text = value;
+                      });
+                    },
+                    controller: ageController,
+                    validator: (value) => value == null || value.isEmpty ? 'Please select your age range' : null,
+                  ),
+                  const SizedBox(height: 16),
                   InputField(
                     controller: passwordController,
                     hintText: "Password",
@@ -180,4 +198,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+}
+
+class _ageController {
 }
