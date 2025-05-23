@@ -22,6 +22,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _selectedAge;
   String? _selectedGender;
+  bool? _takenAntibiotics;
+  bool? _recentInfection;
   bool isLoading = false;
 
   String? _validateFullName(String? value) {
@@ -67,6 +69,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         phone: phoneController.text,
         password: passwordController.text,
         ageGroup: ageController.text,
+        gender: genderController.text,
       );
 
       if (response['success'] == true) {
@@ -171,6 +174,75 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: ageController,
                     validator: (value) => value == null || value == 'Select gender' ? 'Please select your gender' : null,
                   ),
+                  /*Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Have you taken antibiotics in the last week?", style: TextStyle(fontSize: 16)),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: RadioListTile<bool>(
+                              title: const Text("Yes"),
+                              value: true,
+                              groupValue: _takenAntibiotics,
+                              onChanged: (value) {
+                                setState(() {
+                                  _takenAntibiotics = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: RadioListTile<bool>(
+                              title: const Text("No"),
+                              value: false,
+                              groupValue: _takenAntibiotics,
+                              onChanged: (value) {
+                                setState(() {
+                                  _takenAntibiotics = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Have you had an infection or disease in the past 1-2 weeks?", style: TextStyle(fontSize: 16)),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: RadioListTile<bool>(
+                              title: const Text("Yes"),
+                              value: true,
+                              groupValue: _recentInfection,
+                              onChanged: (value) {
+                                setState(() {
+                                  _recentInfection = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: RadioListTile<bool>(
+                              title: const Text("No"),
+                              value: false,
+                              groupValue: _recentInfection,
+                              onChanged: (value) {
+                                setState(() {
+                                  _recentInfection = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),*/
                   const SizedBox(height: 16),
                   InputField(
                     controller: passwordController,
