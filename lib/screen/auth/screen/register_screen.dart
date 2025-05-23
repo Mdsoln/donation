@@ -16,10 +16,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _selectedAge;
+  String? _selectedGender;
   bool isLoading = false;
 
   String? _validateFullName(String? value) {
@@ -143,9 +145,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 16),
                   CustomDropdown<String>(
-                    labelText: 'Age',
-                    items: ['18-20', '21-30', '31-40', '41-50', '51-65'],
-                    value: _selectedAge,
+                    labelText: 'Age Group',
+                    items: ['Select age group', '18-20', '21-30', '31-40', '41-50', '51-65'],
+                    value: _selectedAge ?? 'Select age group',
                     onChanged: (value) {
                       setState(() {
                         _selectedAge = value!;
@@ -153,7 +155,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       });
                     },
                     controller: ageController,
-                    validator: (value) => value == null || value.isEmpty ? 'Please select your age range' : null,
+                    validator: (value) => value == null || value == 'Select age group' ? 'Please select your gender' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  CustomDropdown<String>(
+                    labelText: 'Gender',
+                    items: ['Select gender', 'Male', 'Female', 'Others',],
+                    value: _selectedGender ?? 'Select gender',
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedGender = value!;
+                        genderController.text = value;
+                      });
+                    },
+                    controller: ageController,
+                    validator: (value) => value == null || value == 'Select gender' ? 'Please select your gender' : null,
                   ),
                   const SizedBox(height: 16),
                   InputField(
@@ -198,7 +214,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
-}
-
-class _ageController {
 }
