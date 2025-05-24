@@ -19,7 +19,7 @@ class HospitalSelectionScreen extends StatefulWidget {
 }
 
 class _HospitalSelectionScreenState extends State<HospitalSelectionScreen> {
-  final String baseUrl = "http://192.168.179.217:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.78.217:8080/api/v1/donor";
 
   List<Hospital> hospitals = [];
   bool isLoading = true;

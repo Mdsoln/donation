@@ -24,7 +24,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
   bool isLoading = true;
   String errorMessage = '';
   String? infoMessage;
-  final String baseUrl = "http://192.168.179.217:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.78.217:8080/api/v1/donor";
 
   @override
   void initState() {
@@ -475,11 +475,11 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
 
       final response = await http.post(
         Uri.parse('$baseUrl/make-appointment'),
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            'Authorization': 'Bearer $token',
-          },
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
         body: json.encode({
           'hospitalId': widget.hospital.hospitalId,
           'slotId': selectedSlot.slotId,

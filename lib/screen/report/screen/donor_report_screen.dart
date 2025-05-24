@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
+
+import '../models/donor_report_model.dart';
+import '../models/report_request_model.dart';
+import '../service/generate_report_service.dart';
+import '../service/export_report_service.dart';
 
 class DonorReportScreen extends StatefulWidget {
   const DonorReportScreen({super.key});
@@ -18,7 +19,6 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   String? _error;
-  Map<String, dynamic>? _reportData;
 
   // Form values
   String _reportType = 'QUARTERLY';
@@ -50,7 +50,7 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
           children: [
             _buildReportForm(),
             if (_error != null) _buildErrorMessage(),
-            if (_reportData != null) _buildReportResults(),
+            if (_report != null) _buildReportResults(),
           ],
         ),
       ),
@@ -357,14 +357,14 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Report for ${_reportData!['donorName']}',
+              'Report for ${_report!.donorName}',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
-            Text('Period: ${_reportData!['reportPeriod']}'),
+            Text('Period: ${_report!.reportPeriod}'),
             const SizedBox(height: 16),
 
             // Donation Summary
@@ -376,12 +376,12 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            _buildInfoRow('Total Donations', '${_reportData!['totalDonations']}'),
-            _buildInfoRow('Total Volume', '${_reportData!['totalVolumeMl'].toStringAsFixed(2)} ml'),
-            if (_reportData!['firstDonationDate'] != null)
-              _buildInfoRow('First Donation', _formatDate(_reportData!['firstDonationDate'])),
-            if (_reportData!['lastDonationDate'] != null)
-              _buildInfoRow('Last Donation', _formatDate(_reportData!['lastDonationDate'])),
+            _buildInfoRow('Total Donations', '${_report!.totalDonations}'),
+            _buildInfoRow('Total Volume', '${_report!.totalVolumeMl.toStringAsFixed(2)} ml'),
+            if (_report!.firstDonationDate != null)
+              _buildInfoRow('First Donation', _report!.formatDate(_report!.firstDonationDate!)),
+            if (_report!.lastDonationDate != null)
+              _buildInfoRow('Last Donation', _report!.formatDate(_report!.lastDonationDate!)),
             const SizedBox(height: 16),
 
             // Appointment Statistics
@@ -394,18 +394,16 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              _buildInfoRow('Total Appointments', '${_reportData!['totalAppointments']}'),
-              _buildInfoRow('Completed', '${_reportData!['completedAppointments']}'),
-              _buildInfoRow('Scheduled', '${_reportData!['scheduledAppointments']}'),
-              _buildInfoRow('Expired', '${_reportData!['expiredAppointments']}'),
-              _buildInfoRow('Cancelled', '${_reportData!['cancelledAppointments']}'),
+              _buildInfoRow('Total Appointments', '${_report!.totalAppointments}'),
+              _buildInfoRow('Completed', '${_report!.completedAppointments}'),
+              _buildInfoRow('Scheduled', '${_report!.scheduledAppointments}'),
+              _buildInfoRow('Expired', '${_report!.expiredAppointments}'),
+              _buildInfoRow('Cancelled', '${_report!.cancelledAppointments}'),
               const SizedBox(height: 16),
             ],
 
             // Hospital Breakdown
-            if (_includeHospitalBreakdown &&
-                _reportData!['hospitalData'] != null &&
-                (_reportData!['hospitalData'] as List).isNotEmpty) ...[
+            if (_includeHospitalBreakdown && _report!.hospitalData.isNotEmpty) ...[
               const Text(
                 'Hospital Breakdown',
                 style: TextStyle(
@@ -420,12 +418,12 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
                   DataColumn(label: Text('Donations')),
                   DataColumn(label: Text('Volume (ml)')),
                 ],
-                rows: (_reportData!['hospitalData'] as List).map<DataRow>((hospital) {
+                rows: _report!.hospitalData.map<DataRow>((hospital) {
                   return DataRow(
                     cells: [
-                      DataCell(Text(hospital['hospitalName'])),
-                      DataCell(Text('${hospital['donations']}')),
-                      DataCell(Text(hospital['volumeMl'].toStringAsFixed(2))),
+                      DataCell(Text(hospital.hospitalName)),
+                      DataCell(Text('${hospital.donations}')),
+                      DataCell(Text(hospital.volumeMl.toStringAsFixed(2))),
                     ],
                   );
                 }).toList(),
@@ -460,6 +458,13 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
     return DateFormat('dd MMM yyyy').format(date);
   }
 
+  // Service instances
+  final GenerateReportService _generateReportService = GenerateReportService();
+  final ExportReportService _exportReportService = ExportReportService();
+
+  // DonorReport model instance
+  DonorReport? _report;
+
   Future<void> _generateReport() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -471,25 +476,19 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
     });
 
     try {
-      // Get donor ID from user context or route parameter
-      final donorId = 1; // Replace with actual donor ID
+      // Create a ReportRequest object
+      final request = _createReportRequest();
 
-      final response = await http.post(
-        Uri.parse('http://localhost:8080/api/reports/donor/$donorId'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_AUTH_TOKEN', // Replace with actual token
-        },
-        body: jsonEncode(_prepareRequestBody()),
-      );
+      // Call the service
+      final result = await _generateReportService.generateReport(request);
 
-      if (response.statusCode == 200) {
+      if (result['success']) {
         setState(() {
-          _reportData = jsonDecode(response.body);
+          _report = result['data'];
         });
       } else {
         setState(() {
-          _error = 'Error generating report: ${response.statusCode}';
+          _error = result['error'];
         });
       }
     } catch (e) {
@@ -514,33 +513,15 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
     });
 
     try {
-      // Get donor ID from user context or route parameter
-      final donorId = 1; // Replace with actual donor ID
+      // Create a ReportRequest object
+      final request = _createReportRequest();
 
-      final requestBody = _prepareRequestBody();
-      requestBody['reportFormat'] = format;
+      // Call the service
+      final result = await _exportReportService.exportReport(request, format);
 
-      final response = await http.post(
-        Uri.parse('http://localhost:8080/api/reports/donor/$donorId/export/${format.toLowerCase()}'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_AUTH_TOKEN', // Replace with actual token
-        },
-        body: jsonEncode(requestBody),
-      );
-
-      if (response.statusCode == 200) {
-        // Save file and open it
-        final directory = await getApplicationDocumentsDirectory();
-        final extension = format.toLowerCase() == 'pdf' ? 'pdf' : 'xlsx';
-        final file = File('${directory.path}/donor_report.$extension');
-        await file.writeAsBytes(response.bodyBytes);
-
-        // Open the file
-        await OpenFile.open(file.path);
-      } else {
+      if (!result['success']) {
         setState(() {
-          _error = 'Error exporting report: ${response.statusCode}';
+          _error = result['error'];
         });
       }
     } catch (e) {
@@ -554,25 +535,18 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
     }
   }
 
-  Map<String, dynamic> _prepareRequestBody() {
-    final requestBody = <String, dynamic>{
-      'reportType': _reportType,
-      'reportFormat': _reportFormat,
-      'includeAppointmentStats': _includeAppointmentStats,
-      'includeRequestStats': _includeRequestStats,
-      'includeHospitalBreakdown': _includeHospitalBreakdown,
-    };
-
-    if (_reportType == 'QUARTERLY') {
-      requestBody['year'] = _year;
-      requestBody['quarter'] = _quarter;
-    } else if (_reportType == 'YEARLY') {
-      requestBody['yearOnly'] = _yearOnly;
-    } else if (_reportType == 'CUSTOM') {
-      requestBody['startDate'] = DateFormat('yyyy-MM-dd').format(_startDate!);
-      requestBody['endDate'] = DateFormat('yyyy-MM-dd').format(_endDate!);
-    }
-
-    return requestBody;
+  ReportRequest _createReportRequest() {
+    return ReportRequest(
+      reportType: _reportType,
+      reportFormat: _reportFormat,
+      year: _reportType == 'QUARTERLY' ? _year : null,
+      quarter: _reportType == 'QUARTERLY' ? _quarter : null,
+      yearOnly: _reportType == 'YEARLY' ? _yearOnly : null,
+      startDate: _reportType == 'CUSTOM' ? _startDate : null,
+      endDate: _reportType == 'CUSTOM' ? _endDate : null,
+      includeAppointmentStats: _includeAppointmentStats,
+      includeRequestStats: _includeRequestStats,
+      includeHospitalBreakdown: _includeHospitalBreakdown,
+    );
   }
 }

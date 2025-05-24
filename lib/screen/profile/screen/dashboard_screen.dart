@@ -12,6 +12,7 @@ import '../../appointment/screen/hospital_selection_screen.dart';
 import '../../donation/donation_history_screen.dart';
 import '../../auth/screen/login_screen.dart';
 import '../../general/guidlines/donation_guidlines.dart';
+import '../../report/screen/donor_report_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -93,7 +94,7 @@ class DashboardScreen extends StatelessWidget {
                           child: ClipOval(
                             child: user.picture.isNotEmpty
                                 ? Image.network(
-                              "http://192.168.179.217:8080/images/${user.picture}",
+                              "http://192.168.78.217:8080/images/${user.picture}",
                               width: 70,
                               height: 70,
                               fit: BoxFit.cover,
@@ -518,7 +519,7 @@ class AppDrawer extends StatelessWidget {
                     child: ClipOval(
                       child: user.picture.isNotEmpty
                           ? Image.network(
-                        "http://192.168.179.217:8080/images/${user.picture}",
+                        "http://192.168.78.217:8080/images/${user.picture}",
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
@@ -607,6 +608,13 @@ class AppDrawer extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => DonationGuidelinesScreen()),
+                  );
+                }),
+                _buildDrawerItem(Icons.article, "Report", () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DonorReportScreen()),
                   );
                 }),
               ],
