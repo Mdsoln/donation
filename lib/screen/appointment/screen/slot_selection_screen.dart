@@ -1,11 +1,9 @@
-import 'package:donor_app/screen/appointment/service/appointment_summary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import '../models/appointment_response.dart';
 import '../models/hospital_model.dart';
 import '../models/slot_model.dart';
 import 'appointment_list_details.dart';
@@ -77,8 +75,8 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Make a Schedule',
-             style: TextStyle(color: Colors.black),
+          'Make a Schedule',
+          style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -102,10 +100,10 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-            Text(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
             widget.hospital.hospitalName,
             style: TextStyle(
               fontSize: 20,
@@ -326,8 +324,8 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
                         minimumSize: const Size(double.infinity, 48),
                       ),
                       child: const Text(
-                          'Confirm',
-                           style: TextStyle(color: Colors.white),
+                        'Confirm',
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -394,7 +392,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
     return months[month - 1];
   }
 
-  void _showSuccessDialog({required VoidCallback onOkay}) {
+  void _showSuccessDialog() {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -431,31 +429,12 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
             ElevatedButton(
               onPressed: () async {
                 Navigator.pop(context);
-
-                final prefs = await SharedPreferences.getInstance();
-                final token = prefs.getString('token')!;
-                final decoded = JwtDecoder.decode(token);
-                final donorId = decoded['userId'].toString();
-
-                try{
-                  final api = AppointmentHistoryAPI();
-                  final response = await api.fetchAppointments(donorId, token);
-                  if (!mounted) return;
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => MyAppointmentScreen(response: response),
-                    ),
-                  );
-                }catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed to load appointments'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => MyAppointmentScreen(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
@@ -464,7 +443,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
                 ),
               ),
               child: const Text(
-                  "OKAY",
+                "OKAY",
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -496,11 +475,11 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
 
       final response = await http.post(
         Uri.parse('$baseUrl/make-appointment'),
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            'Authorization': 'Bearer $token',
-          },
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
         body: json.encode({
           'hospitalId': widget.hospital.hospitalId,
           'slotId': selectedSlot.slotId,
@@ -513,18 +492,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
         print("slot ID: ${selectedSlot.slotId}");
       }
       if (response.statusCode == 201) {
-        final jsonData = json.decode(response.body);
-        final appointmentResponse = AppointmentResponse.fromJson(jsonData);
-        _showSuccessDialog(onOkay: () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => MyAppointmentScreen(
-                response: appointmentResponse,
-              ),
-            ),
-          );
-        });
-
+        _showSuccessDialog();
       } else {
         final errorData = json.decode(response.body);
         final errorMessage = errorData['message'] ?? 'Unknown error occurred';

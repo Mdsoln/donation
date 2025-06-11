@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../widgets/drop_down_field.dart';
 import '../service/register_service.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/input_field.dart';
@@ -14,9 +15,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? _selectedAge;
+  String? _selectedGender;
+  bool? _takenAntibiotics;
+  bool? _recentInfection;
   bool isLoading = false;
 
   String? _validateFullName(String? value) {
@@ -61,6 +68,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: emailController.text,
         phone: phoneController.text,
         password: passwordController.text,
+        ageGroup: ageController.text,
+        gender: genderController.text,
       );
 
       if (response['success'] == true) {
@@ -137,6 +146,103 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator: _validatePhone,
                     keyboardType: TextInputType.phone,
                   ),
+                  const SizedBox(height: 16),
+                  CustomDropdown<String>(
+                    labelText: 'Age Group',
+                    items: ['Select age group', '18-20', '21-30', '31-40', '41-50', '51-65'],
+                    value: _selectedAge ?? 'Select age group',
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedAge = value!;
+                        ageController.text = value;
+                      });
+                    },
+                    controller: ageController,
+                    validator: (value) => value == null || value == 'Select age group' ? 'Please select your gender' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  CustomDropdown<String>(
+                    labelText: 'Gender',
+                    items: ['Select gender', 'Male', 'Female', 'Others',],
+                    value: _selectedGender ?? 'Select gender',
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedGender = value!;
+                        genderController.text = value;
+                      });
+                    },
+                    controller: ageController,
+                    validator: (value) => value == null || value == 'Select gender' ? 'Please select your gender' : null,
+                  ),
+                  /*Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Have you taken antibiotics in the last week?", style: TextStyle(fontSize: 16)),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: RadioListTile<bool>(
+                              title: const Text("Yes"),
+                              value: true,
+                              groupValue: _takenAntibiotics,
+                              onChanged: (value) {
+                                setState(() {
+                                  _takenAntibiotics = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: RadioListTile<bool>(
+                              title: const Text("No"),
+                              value: false,
+                              groupValue: _takenAntibiotics,
+                              onChanged: (value) {
+                                setState(() {
+                                  _takenAntibiotics = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Have you had an infection or disease in the past 1-2 weeks?", style: TextStyle(fontSize: 16)),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: RadioListTile<bool>(
+                              title: const Text("Yes"),
+                              value: true,
+                              groupValue: _recentInfection,
+                              onChanged: (value) {
+                                setState(() {
+                                  _recentInfection = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: RadioListTile<bool>(
+                              title: const Text("No"),
+                              value: false,
+                              groupValue: _recentInfection,
+                              onChanged: (value) {
+                                setState(() {
+                                  _recentInfection = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),*/
                   const SizedBox(height: 16),
                   InputField(
                     controller: passwordController,

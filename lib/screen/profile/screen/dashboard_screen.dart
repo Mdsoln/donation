@@ -1,15 +1,18 @@
-import 'package:donor_app/screen/profile/profile_screen.dart';
+import 'package:donor_app/screen/appointment/screen/appointment_list_details.dart';
+import 'package:donor_app/screen/profile/screen/profile_screen.dart';
 import 'package:donor_app/screen/donation/urgent_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../appointment/models/appointment_card_model.dart';
-import '../auth/models/auth_model.dart';
-import '../auth/models/auth_provider.dart';
-import '../appointment/screen/hospital_selection_screen.dart';
-import '../donation/donation_history_screen.dart';
-import '../auth/screen/login_screen.dart';
+import '../../appointment/models/appointment_card_model.dart';
+import '../../auth/models/auth_model.dart';
+import '../../auth/models/auth_provider.dart';
+import '../../appointment/screen/hospital_selection_screen.dart';
+import '../../donation/donation_history_screen.dart';
+import '../../auth/screen/login_screen.dart';
+import '../../general/guidlines/donation_guidlines.dart';
+import '../../report/screen/donor_report_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -35,7 +38,7 @@ class DashboardScreen extends StatelessWidget {
             _buildHeaderSection(context, user),
 
             if (user.latestAppointment != null)
-              _buildAppointmentCard(user.latestAppointment!),
+              _buildAppointmentCard(context, user.latestAppointment!),
 
             _buildQuickActions(context),
 
@@ -159,7 +162,7 @@ class DashboardScreen extends StatelessWidget {
                                 "Blood\nGroup",
                                 style: GoogleFonts.poppins(
                                   fontSize: 14,
-                                  color: Colors.white60,
+                                  color: Colors.white,
                                 ),
                               ),
                               Text(
@@ -194,7 +197,7 @@ class DashboardScreen extends StatelessWidget {
                                 "Donation\nTimes",
                                 style: GoogleFonts.poppins(
                                   fontSize: 14,
-                                  color: Colors.white60,
+                                  color: Colors.white,
                                 ),
                               ),
                               Text(
@@ -220,7 +223,7 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppointmentCard(AppointmentCard appointment) {
+  Widget _buildAppointmentCard(BuildContext context, AppointmentCard appointment) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Container(
@@ -320,7 +323,12 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle view appointment
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyAppointmentScreen(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red.shade700,
@@ -399,12 +407,12 @@ class DashboardScreen extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         children: [
           _actionButton(
-            "Find Donation Center",
+            "Donation Guidelines",
             Icons.location_on,
             context,
                 () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HospitalSelectionScreen()),
+              MaterialPageRoute(builder: (context) => DonationGuidelinesScreen()),
             ),
           ),
           _actionButton(
@@ -568,7 +576,11 @@ class AppDrawer extends StatelessWidget {
                   );
                 }),
                 _buildDrawerItem(Icons.calendar_today, "My Appointment", () {
-                  // Handle navigation to appointments
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyAppointmentScreen()),
+                  );
                 }),
                 _buildDrawerItem(Icons.history, "Donation History", () {
                   Navigator.pop(context);
@@ -592,7 +604,18 @@ class AppDrawer extends StatelessWidget {
                   );
                 }),
                 _buildDrawerItem(Icons.article, "Donation Guidelines", () {
-                  // Handle navigation to guidelines
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DonationGuidelinesScreen()),
+                  );
+                }),
+                _buildDrawerItem(Icons.article, "Report", () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DonorReportScreen()),
+                  );
                 }),
               ],
             ),

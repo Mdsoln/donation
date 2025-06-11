@@ -11,7 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../module/profile_response.dart';
 
 class UpdateProfile{
-
   final String baseUrl = "http://192.168.208.49:8080/api/v1/donor";
 
   Future<ProfileResponse> updateProfile(ProfileRequest request) async {

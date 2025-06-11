@@ -1,26 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../profile/dashboard_screen.dart';
+import '../../profile/screen/dashboard_screen.dart';
 import '../models/appointment_details.dart';
 import '../models/appointment_response.dart';
+import '../service/appointment_summary.dart';
 
 class MyAppointmentScreen extends StatefulWidget {
-  final AppointmentResponse response;
-
-  const MyAppointmentScreen({Key? key, required this.response}) : super(key: key);
+  const MyAppointmentScreen({super.key});
 
   @override
   State<MyAppointmentScreen> createState() => _MyAppointmentScreenState();
 }
 
 class _MyAppointmentScreenState extends State<MyAppointmentScreen> {
+  late Future<AppointmentResponse> _futureAppointments;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureAppointments = _loadAppointments();
+  }
+
+  Future<AppointmentResponse> _loadAppointments() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token')!;
+    final decoded = JwtDecoder.decode(token);
+    final donorId = decoded['userId'].toString();
+
+    final api = AppointmentHistoryAPI();
+    return await api.fetchAppointments(donorId, token);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final appointments = widget.response.appointments;
-    final total = widget.response.total.toString();
-    final attended = widget.response.attended.toString();
-    final expired = widget.response.expired.toString();
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -35,32 +49,50 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: FutureBuilder<AppointmentResponse>(
+        future: _futureAppointments,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Failed to load appointments.'));
+          } else if (!snapshot.hasData) {
+            return Center(child: Text('No appointments found.'));
+          }
+
+          final appointments = snapshot.data!.appointments;
+          final total = snapshot.data!.total.toString();
+          final attended = snapshot.data!.attended.toString();
+          final expired = snapshot.data!.expired.toString();
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Column(
               children: [
-                _buildSummaryCard('Total', total),
-                _buildSummaryCard('Attended', attended),
-                _buildSummaryCard('Expired', expired),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildSummaryCard('Total', total),
+                    _buildSummaryCard('Attended', attended),
+                    _buildSummaryCard('Expired', expired),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: appointments.length,
+                    itemBuilder: (context, index) {
+                      final item = appointments[index];
+                      return _buildAppointmentCard(item);
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Icon(Icons.arrow_downward, size: 30, color: Colors.grey),
               ],
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: appointments.length,
-                itemBuilder: (context, index) {
-                  final item = appointments[index];
-                  return _buildAppointmentCard(item);
-                },
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Icon(Icons.arrow_downward, size: 30, color: Colors.grey),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

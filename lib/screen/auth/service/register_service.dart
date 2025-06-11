@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class RegisterService {
+
   static const String _baseUrl = "http://192.168.208.49:8080/api/v1/donor";
 
   Future<Map<String, dynamic>> registerDonor({
@@ -9,6 +10,8 @@ class RegisterService {
     required String email,
     required String phone,
     required String password,
+    required String ageGroup,
+    required String gender,
   }) async {
     final url = Uri.parse("$_baseUrl/register-donor");
 
@@ -24,6 +27,8 @@ class RegisterService {
           "email": email,
           "phone": phone,
           "password": password,
+          "ageGroup": ageGroup,
+          "gender": gender,
         }),
       );
 

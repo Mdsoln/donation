@@ -24,11 +24,15 @@ dependencies:
   google_maps_flutter: ">=2.5.3 <3.0.0"
   geolocator: ^9.0.2
   jwt_decoder: ^2.0.1
-  lottie: ^3.3.1
   image_picker: ^1.0.2
   http_parser: ^4.0.2
   dropdown_button2: ^2.3.9
   flutter_rounded_date_picker: ^3.0.1
+  excel: ^2.0.4
+  path_provider: ^2.0.11
+  pdf: ^3.6.5
+  printing: ^5.9.0
+  open_file: ^3.2.1
 
 
 dev_dependencies:
@@ -44,6 +48,10 @@ flutter:
   # Asset Images
   assets:
     - assets/images/drop.jpeg
+    - assets/images/alert.png
+    - assets/images/donate.png
+    - assets/images/reset.png
+    - assets/images/study.png
     - assets/images/donation_banner.png
     - assets/animation/ezgif.com-crop.gif
     - assets/animation/ezgif.com-resize.gif
