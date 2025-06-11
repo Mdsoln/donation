@@ -163,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 16),
                   CustomDropdown<String>(
                     labelText: 'Gender',
-                    items: ['Select gender', 'Male', 'Female', 'Others',],
+                    items: ['Select gender', 'Male', 'Female',],
                     value: _selectedGender ?? 'Select gender',
                     onChanged: (value) {
                       setState(() {
