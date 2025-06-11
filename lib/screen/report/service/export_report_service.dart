@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/report_request_model.dart';
 
 class ExportReportService {
-  final String _baseUrl = 'http://192.168.78.217:8080/api/v1/reports';
+  final String _baseUrl = 'http://192.168.208.49:8080/api/v1/reports';
 
   Future<Map<String, dynamic>> exportReport(ReportRequest request, String format) async {
     try {
@@ -29,7 +29,7 @@ class ExportReportService {
       requestBody['reportFormat'] = format;
 
       final response = await http.post(
-        Uri.parse('http://localhost:8080/api/reports/donor/$donorId/export/${format.toLowerCase()}'),
+        Uri.parse('$_baseUrl/donor/$donorId/export/${format.toLowerCase()}'),
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",

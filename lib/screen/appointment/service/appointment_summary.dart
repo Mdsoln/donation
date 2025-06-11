@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import '../models/appointment_response.dart';
 
 class AppointmentHistoryAPI {
-  final String baseUrl = "http://192.168.78.217:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.208.49:8080/api/v1/donor";
 
 
   Future<AppointmentResponse> fetchAppointments(String donorId, String token) async {

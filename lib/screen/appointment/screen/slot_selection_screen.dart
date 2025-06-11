@@ -24,7 +24,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
   bool isLoading = true;
   String errorMessage = '';
   String? infoMessage;
-  final String baseUrl = "http://192.168.78.217:8080/api/v1/donor";
+  final String baseUrl = "http://192.168.208.49:8080/api/v1/donor";
 
   @override
   void initState() {
@@ -75,8 +75,8 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Make a Schedule',
-             style: TextStyle(color: Colors.black),
+          'Make a Schedule',
+          style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -100,10 +100,10 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-            Text(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
             widget.hospital.hospitalName,
             style: TextStyle(
               fontSize: 20,
@@ -324,8 +324,8 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
                         minimumSize: const Size(double.infinity, 48),
                       ),
                       child: const Text(
-                          'Confirm',
-                           style: TextStyle(color: Colors.white),
+                        'Confirm',
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -443,7 +443,7 @@ class _SlotSelectionScreenState extends State<SlotSelectionScreen> {
                 ),
               ),
               child: const Text(
-                  "OKAY",
+                "OKAY",
                 style: TextStyle(color: Colors.white),
               ),
             ),
