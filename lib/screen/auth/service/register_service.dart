@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class RegisterService {
 
-  static const String _baseUrl = "http://192.168.208.49:8080/api/v1/donor";
+  static const String _baseUrl = "http://192.168.1.194:8080/api/v1/donor";
 
   Future<Map<String, dynamic>> registerDonor({
     required String fullName,
