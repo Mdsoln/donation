@@ -22,7 +22,7 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
 
   // Form values
   final String _reportType = 'QUARTERLY';
-  final String _reportFormat = 'JSON';
+  final String _reportFormat = 'PDF';
   final int _year = DateTime.now().year;
   final int _quarter = (DateTime.now().month - 1) ~/ 3 + 1;
   final int _yearOnly = DateTime.now().year;
@@ -96,7 +96,8 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'This report is a comprehensive summary of your actions\nin serving lives for the past 3 months',
+                    'This report is a comprehensive summary of your actions '
+                        'in serving lives for the past 3 months',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
@@ -104,16 +105,31 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton.icon(
-                onPressed: () => _exportReport(_reportFormat),
-                icon: const Icon(Icons.download),
-                label: const Text("Export as"),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.red),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: DropdownButton<String>(
+                    value: _reportFormat,
+                    underline: const SizedBox(),
+                    items: const [
+                      DropdownMenuItem(value: 'PDF', child: Text('PDF')),
+                      DropdownMenuItem(value: 'EXCEL', child: Text('Excel')),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        if (value != null) _exportReport(value);
+                      });
+                    },
+                    icon: const Icon(Icons.arrow_drop_down),
+                  ),
                 ),
-              ),
+              ],
             ),
             const Divider(),
             Container(
