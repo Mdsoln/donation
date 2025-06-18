@@ -8,7 +8,7 @@ import '../models/donor_report_model.dart';
 import '../models/report_request_model.dart';
 
 class GenerateReportService {
-  final String _baseUrl = 'http://192.168.78.217:8080/api/v1/reports';
+  final String _baseUrl = 'http://192.168.1.194:8080/api/v1/reports';
 
   Future<Map<String, dynamic>> generateReport(ReportRequest request) async {
     try {
@@ -23,7 +23,7 @@ class GenerateReportService {
       final donorId = decoded['userId'];
 
       final response = await http.post(
-        Uri.parse('http://localhost:8080/api/reports/donor/$donorId'),
+        Uri.parse('$_baseUrl/donor/$donorId'),
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",

@@ -1,18 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/donor_report_model.dart';
 import '../models/report_request_model.dart';
-import '../service/generate_report_service.dart';
 import '../service/export_report_service.dart';
+import '../service/generate_report_service.dart';
+
+
 
 class DonorReportScreen extends StatefulWidget {
   const DonorReportScreen({super.key});
 
   @override
-  _DonorReportScreenState createState() => _DonorReportScreenState();
+  State<DonorReportScreen> createState() => _DonorReportScreenState();
 }
 
 class _DonorReportScreenState extends State<DonorReportScreen> {
@@ -21,21 +21,27 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
   String? _error;
 
   // Form values
-  String _reportType = 'QUARTERLY';
-  String _reportFormat = 'JSON';
-  int _year = DateTime.now().year;
-  int _quarter = (DateTime.now().month - 1) ~/ 3 + 1;
-  int _yearOnly = DateTime.now().year;
+  final String _reportType = 'QUARTERLY';
+  final String _reportFormat = 'JSON';
+  final int _year = DateTime.now().year;
+  final int _quarter = (DateTime.now().month - 1) ~/ 3 + 1;
+  final int _yearOnly = DateTime.now().year;
   DateTime? _startDate;
   DateTime? _endDate;
-  bool _includeAppointmentStats = true;
-  bool _includeRequestStats = true;
-  bool _includeHospitalBreakdown = true;
+  final bool _includeAppointmentStats = true;
+  final bool _includeRequestStats = true;
+  final bool _includeHospitalBreakdown = true;
 
   // Available options
-  final List<int> _years = List.generate(
-      6, (index) => DateTime.now().year - index);
+  final List<int> _years = List.generate(6, (index) => DateTime.now().year - index);
   final List<int> _quarters = [1, 2, 3, 4];
+
+  // DonorReport model instance
+  DonorReport? _report;
+
+  // Service instances (replace with your actual services)
+  final GenerateReportService _generateReportService = GenerateReportService();
+  final ExportReportService _exportReportService = ExportReportService();
 
   @override
   Widget build(BuildContext context) {
@@ -58,274 +64,86 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
   }
 
   Widget _buildReportForm() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          ElevatedButton(
+            onPressed: _isLoading ? null : _generateReport,
+            child: _isLoading ? const CircularProgressIndicator() : const Text('Generate Report'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReportResults() {
+    final report = _report!;
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Generate Donation Report',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Report Type
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Report Type',
-                  border: OutlineInputBorder(),
-                ),
-                value: _reportType,
-                items: const [
-                  DropdownMenuItem(value: 'QUARTERLY', child: Text('Quarterly')),
-                  DropdownMenuItem(value: 'YEARLY', child: Text('Yearly')),
-                  DropdownMenuItem(value: 'CUSTOM', child: Text('Custom Date Range')),
-                  DropdownMenuItem(value: 'ALL_TIME', child: Text('All Time')),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _reportType = value!;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Report Format
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Report Format',
-                  border: OutlineInputBorder(),
-                ),
-                value: _reportFormat,
-                items: const [
-                  DropdownMenuItem(value: 'JSON', child: Text('JSON (View Online)')),
-                  DropdownMenuItem(value: 'PDF', child: Text('PDF')),
-                  DropdownMenuItem(value: 'EXCEL', child: Text('Excel')),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _reportFormat = value!;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Quarterly Options
-              if (_reportType == 'QUARTERLY') ...[
-                Row(
-                  children: [
-                    Expanded(
-                      child: DropdownButtonFormField<int>(
-                        decoration: const InputDecoration(
-                          labelText: 'Year',
-                          border: OutlineInputBorder(),
-                        ),
-                        value: _year,
-                        items: _years.map((year) => DropdownMenuItem(
-                          value: year,
-                          child: Text(year.toString()),
-                        )).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _year = value!;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: DropdownButtonFormField<int>(
-                        decoration: const InputDecoration(
-                          labelText: 'Quarter',
-                          border: OutlineInputBorder(),
-                        ),
-                        value: _quarter,
-                        items: _quarters.map((quarter) => DropdownMenuItem(
-                          value: quarter,
-                          child: Text('Q$quarter'),
-                        )).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _quarter = value!;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              // Yearly Options
-              if (_reportType == 'YEARLY') ...[
-                DropdownButtonFormField<int>(
-                  decoration: const InputDecoration(
-                    labelText: 'Year',
-                    border: OutlineInputBorder(),
-                  ),
-                  value: _yearOnly,
-                  items: _years.map((year) => DropdownMenuItem(
-                    value: year,
-                    child: Text(year.toString()),
-                  )).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _yearOnly = value!;
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              // Custom Date Range Options
-              if (_reportType == 'CUSTOM') ...[
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Start Date',
-                          border: OutlineInputBorder(),
-                          suffixIcon: Icon(Icons.calendar_today),
-                        ),
-                        readOnly: true,
-                        controller: TextEditingController(
-                          text: _startDate != null
-                              ? DateFormat('yyyy-MM-dd').format(_startDate!)
-                              : '',
-                        ),
-                        onTap: () async {
-                          final date = await showDatePicker(
-                            context: context,
-                            initialDate: _startDate ?? DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime.now(),
-                          );
-                          if (date != null) {
-                            setState(() {
-                              _startDate = date;
-                            });
-                          }
-                        },
-                        validator: (value) {
-                          if (_reportType == 'CUSTOM' && _startDate == null) {
-                            return 'Please select a start date';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'End Date',
-                          border: OutlineInputBorder(),
-                          suffixIcon: Icon(Icons.calendar_today),
-                        ),
-                        readOnly: true,
-                        controller: TextEditingController(
-                          text: _endDate != null
-                              ? DateFormat('yyyy-MM-dd').format(_endDate!)
-                              : '',
-                        ),
-                        onTap: () async {
-                          final date = await showDatePicker(
-                            context: context,
-                            initialDate: _endDate ?? DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime.now(),
-                          );
-                          if (date != null) {
-                            setState(() {
-                              _endDate = date;
-                            });
-                          }
-                        },
-                        validator: (value) {
-                          if (_reportType == 'CUSTOM' && _endDate == null) {
-                            return 'Please select an end date';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              // Additional Options
-              CheckboxListTile(
-                title: const Text('Include Appointment Statistics'),
-                value: _includeAppointmentStats,
-                onChanged: (value) {
-                  setState(() {
-                    _includeAppointmentStats = value!;
-                  });
-                },
-                controlAffinity: ListTileControlAffinity.leading,
-              ),
-              CheckboxListTile(
-                title: const Text('Include Request Statistics'),
-                value: _includeRequestStats,
-                onChanged: (value) {
-                  setState(() {
-                    _includeRequestStats = value!;
-                  });
-                },
-                controlAffinity: ListTileControlAffinity.leading,
-              ),
-              CheckboxListTile(
-                title: const Text('Include Hospital Breakdown'),
-                value: _includeHospitalBreakdown,
-                onChanged: (value) {
-                  setState(() {
-                    _includeHospitalBreakdown = value!;
-                  });
-                },
-                controlAffinity: ListTileControlAffinity.leading,
-              ),
-              const SizedBox(height: 16),
-
-              // Buttons
-              Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _generateReport,
-                      child: _isLoading
-                          ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
-                      )
-                          : const Text('Generate Report'),
-                    ),
+                  const Text(
+                    'Report',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: _isLoading ? null : () => _exportReport('PDF'),
-                    child: const Text('PDF'),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: _isLoading ? null : () => _exportReport('EXCEL'),
-                    child: const Text('Excel'),
+                  const SizedBox(height: 4),
+                  Text(
+                    'This report is a comprehensive summary of your actions\nin serving lives for the past 3 months',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 16),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton.icon(
+                onPressed: () => _exportReport(_reportFormat),
+                icon: const Icon(Icons.download),
+                label: const Text("Export as"),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                ),
+              ),
+            ),
+            const Divider(),
+            _buildSectionTitle("Donor: ${report.donorName}"),
+            _buildKeyValue("Blood Group", report.bloodGroup),
+            _buildKeyValue("Location", report.location),
+            const Divider(),
+            _buildSectionTitle("Donation Summary"),
+            _buildKeyValue("Total Donation", report.totalDonations.toString()),
+            _buildKeyValue("Last Donation", _formatDate(report.lastDonationDate)),
+            _buildKeyValue("Eligible Date", _formatDate(report.eligibleDate)),
+            const Divider(),
+            _buildSectionTitle("Appointments"),
+            _buildKeyValue("Appointments Booked", report.scheduledAppointments.toString()),
+            _buildKeyValue("Appointments Attended", report.completedAppointments.toString()),
+            _buildKeyValue("Appointments Missed", report.expiredAppointments.toString()),
+            const Divider(),
+            _buildSectionTitle("Top Donation Center"),
+            _buildKeyValue("Center", report.topDonationCenter ?? "N/A"),
+            const Divider(),
+            _buildSectionTitle("Most Active Month"),
+            _buildKeyValue("Month", report.mostActiveMonth ?? "N/A"),
+            const Divider(),
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                "All copyrights are reserved",
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -347,123 +165,41 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
     );
   }
 
-  Widget _buildReportResults() {
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.only(top: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Report for ${_report!.donorName}',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text('Period: ${_report!.reportPeriod}'),
-            const SizedBox(height: 16),
-
-            // Donation Summary
-            const Text(
-              'Donation Summary',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            _buildInfoRow('Total Donations', '${_report!.totalDonations}'),
-            _buildInfoRow('Total Volume', '${_report!.totalVolumeMl.toStringAsFixed(2)} ml'),
-            if (_report!.firstDonationDate != null)
-              _buildInfoRow('First Donation', _report!.formatDate(_report!.firstDonationDate!)),
-            if (_report!.lastDonationDate != null)
-              _buildInfoRow('Last Donation', _report!.formatDate(_report!.lastDonationDate!)),
-            const SizedBox(height: 16),
-
-            // Appointment Statistics
-            if (_includeAppointmentStats) ...[
-              const Text(
-                'Appointment Statistics',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              _buildInfoRow('Total Appointments', '${_report!.totalAppointments}'),
-              _buildInfoRow('Completed', '${_report!.completedAppointments}'),
-              _buildInfoRow('Scheduled', '${_report!.scheduledAppointments}'),
-              _buildInfoRow('Expired', '${_report!.expiredAppointments}'),
-              _buildInfoRow('Cancelled', '${_report!.cancelledAppointments}'),
-              const SizedBox(height: 16),
-            ],
-
-            // Hospital Breakdown
-            if (_includeHospitalBreakdown && _report!.hospitalData.isNotEmpty) ...[
-              const Text(
-                'Hospital Breakdown',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              DataTable(
-                columns: const [
-                  DataColumn(label: Text('Hospital')),
-                  DataColumn(label: Text('Donations')),
-                  DataColumn(label: Text('Volume (ml)')),
-                ],
-                rows: _report!.hospitalData.map<DataRow>((hospital) {
-                  return DataRow(
-                    cells: [
-                      DataCell(Text(hospital.hospitalName)),
-                      DataCell(Text('${hospital.donations}')),
-                      DataCell(Text(hospital.volumeMl.toStringAsFixed(2))),
-                    ],
-                  );
-                }).toList(),
-              ),
-            ],
-          ],
-        ),
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12.0, bottom: 4),
+      child: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.red),
       ),
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildKeyValue(String key, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            flex: 2,
-            child: Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text(
+            "$key:",
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
-          Expanded(
-            flex: 3,
-            child: Text(value),
-          ),
+          Text(value),
         ],
       ),
     );
   }
 
-  String _formatDate(String dateString) {
-    final date = DateTime.parse(dateString);
-    return DateFormat('dd MMM yyyy').format(date);
+  String _formatDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) return "N/A";
+    try {
+      final date = DateTime.parse(dateString);
+      return DateFormat('dd MMM yyyy').format(date);
+    } catch (_) {
+      return "N/A";
+    }
   }
-
-  // Service instances
-  final GenerateReportService _generateReportService = GenerateReportService();
-  final ExportReportService _exportReportService = ExportReportService();
-
-  // DonorReport model instance
-  DonorReport? _report;
 
   Future<void> _generateReport() async {
     if (!_formKey.currentState!.validate()) {
@@ -476,10 +212,7 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
     });
 
     try {
-      // Create a ReportRequest object
       final request = _createReportRequest();
-
-      // Call the service
       final result = await _generateReportService.generateReport(request);
 
       if (result['success']) {
@@ -513,10 +246,7 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
     });
 
     try {
-      // Create a ReportRequest object
       final request = _createReportRequest();
-
-      // Call the service
       final result = await _exportReportService.exportReport(request, format);
 
       if (!result['success']) {
