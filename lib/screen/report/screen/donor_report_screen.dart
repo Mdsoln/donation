@@ -116,9 +116,58 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
               ),
             ),
             const Divider(),
-            _buildSectionTitle("Donor: ${report.donorName}"),
-            _buildKeyValue("Blood Group", report.bloodGroup),
-            _buildKeyValue("Location", report.location),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          "Donor: ${report.donorName}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        Text(
+                          "Blood Group: ${report.bloodGroup}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        Text(
+                          "Location: ${report.location}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue, // Optional: to match design
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "Donation Summary",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildKeyValue("Total Donation", report.totalDonations.toString()),
+                  _buildKeyValue("Last Donation", _formatDate(report.lastDonationDate)),
+                  _buildKeyValue("Eligible Date", _formatDate(report.eligibleDate)),
+                ],
+              ),
+            ),
             const Divider(),
             _buildSectionTitle("Donation Summary"),
             _buildKeyValue("Total Donation", report.totalDonations.toString()),
