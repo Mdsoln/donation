@@ -22,7 +22,7 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
 
   // Form values
   final String _reportType = 'QUARTERLY';
-  final String _reportFormat = 'JSON';
+  final String _reportFormat = 'PDF';
   final int _year = DateTime.now().year;
   final int _quarter = (DateTime.now().month - 1) ~/ 3 + 1;
   final int _yearOnly = DateTime.now().year;
@@ -87,16 +87,12 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header
             Center(
               child: Column(
                 children: [
-                  const Text(
-                    'Report',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 4),
                   Text(
-                    'This report is a comprehensive summary of your actions\nin serving lives for the past 3 months',
+                    'This report is a comprehensive summary of your actions in serving lives for the past 3 months',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
@@ -104,38 +100,91 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton.icon(
-                onPressed: () => _exportReport(_reportFormat),
-                icon: const Icon(Icons.download),
-                label: const Text("Export as"),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            // Export Dropdown
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.red),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: DropdownButton<String>(
+                    value: _reportFormat,
+                    underline: const SizedBox(),
+                    items: const [
+                      DropdownMenuItem(value: 'PDF', child: Text('PDF')),
+                      DropdownMenuItem(value: 'EXCEL', child: Text('Excel')),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        if (value != null) _exportReport(value);
+                      });
+                    },
+                    icon: const Icon(Icons.arrow_drop_down),
+                  ),
                 ),
-              ),
+              ],
             ),
-            const Divider(),
-            _buildSectionTitle("Donor: ${report.donorName}"),
-            _buildKeyValue("Blood Group", report.bloodGroup),
-            _buildKeyValue("Location", report.location),
-            const Divider(),
-            _buildSectionTitle("Donation Summary"),
-            _buildKeyValue("Total Donation", report.totalDonations.toString()),
-            _buildKeyValue("Last Donation", _formatDate(report.lastDonationDate)),
-            _buildKeyValue("Eligible Date", _formatDate(report.eligibleDate)),
-            const Divider(),
-            _buildSectionTitle("Appointments"),
-            _buildKeyValue("Appointments Booked", report.scheduledAppointments.toString()),
-            _buildKeyValue("Appointments Attended", report.completedAppointments.toString()),
-            _buildKeyValue("Appointments Missed", report.expiredAppointments.toString()),
-            const Divider(),
-            _buildSectionTitle("Top Donation Center"),
-            _buildKeyValue("Center", report.topDonationCenter ?? "N/A"),
-            const Divider(),
-            _buildSectionTitle("Most Active Month"),
-            _buildKeyValue("Month", report.mostActiveMonth ?? "N/A"),
-            const Divider(),
+            const SizedBox(height: 16),
+            // Donor Info
+            _buildSectionContainer(
+              children: [
+                Center(
+                  child: Column(
+                    children: [
+                      Text("Donor: ${report.donorName}",
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text("Blood Group: ${report.bloodGroup}",
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text("Location: ${report.location}",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.blue)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text("Donation Summary",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red)),
+                const SizedBox(height: 8),
+                _buildKeyValue("Total Donation", report.totalDonations.toString()),
+                _buildKeyValue("Last Donation", _formatDate(report.lastDonationDate)),
+                _buildKeyValue("Eligible Date", _formatDate(report.eligibleDate)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Appointments Section
+            _buildSectionContainer(
+              children: [
+                const Text("Appointments",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red)),
+                const SizedBox(height: 8),
+                _buildKeyValue("Appointments Booked", report.scheduledAppointments.toString()),
+                _buildKeyValue("Appointments Attended", report.completedAppointments.toString()),
+                _buildKeyValue("Appointments Missed", report.expiredAppointments.toString()),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Top Donation Center
+            _buildSectionContainer(
+              children: [
+                const Text("Top Donation Center",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red)),
+                const SizedBox(height: 8),
+                _buildKeyValue("Center", report.topDonationCenter ?? "N/A"),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Most Active Month
+            _buildSectionContainer(
+              children: [
+                const Text("Most Active Month",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red)),
+                const SizedBox(height: 8),
+                _buildKeyValue("Month", report.mostActiveMonth ?? "N/A"),
+              ],
+            ),
             const SizedBox(height: 16),
             Center(
               child: Text(
@@ -145,6 +194,20 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionContainer({required List<Widget> children}) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
       ),
     );
   }
@@ -165,15 +228,6 @@ class _DonorReportScreenState extends State<DonorReportScreen> {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12.0, bottom: 4),
-      child: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.red),
-      ),
-    );
-  }
 
   Widget _buildKeyValue(String key, String value) {
     return Padding(
