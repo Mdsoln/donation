@@ -9,7 +9,7 @@ class AppointmentHistoryAPI {
   final String baseUrl = "http://192.168.55.49:8080/api/v1/donor";
 
 
-  Future<AppointmentResponse?> fetchAppointments(String donorId, String token) async {
+  Future<AppointmentResponse?> fetchAppointments(int donorId, String token) async {
     final response = await http.get(
       Uri.parse('$baseUrl/appointments/$donorId'),
       headers: {
