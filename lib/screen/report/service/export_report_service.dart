@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/report_request_model.dart';
 
 class ExportReportService {
-  final String _baseUrl = 'http://192.168.223.49:8080/api/v1/reports';
+  final String _baseUrl = 'http://192.168.55.49:8080/api/v1/reports';
 
   Future<Map<String, dynamic>> exportReport(ReportRequest request, String format) async {
     try {

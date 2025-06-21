@@ -519,7 +519,7 @@ class AppDrawer extends StatelessWidget {
                     child: ClipOval(
                       child: user.picture.isNotEmpty
                           ? Image.network(
-                        "http://192.168.223.49:8080/images/${user.picture}",
+                        "http://192.168.55.49:8080/images/${user.picture}",
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
