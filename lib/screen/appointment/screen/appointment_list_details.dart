@@ -15,7 +15,8 @@ class MyAppointmentScreen extends StatefulWidget {
 }
 
 class _MyAppointmentScreenState extends State<MyAppointmentScreen> {
-  late Future<AppointmentResponse> _futureAppointments;
+  late Future<void> _futureAppointments;
+
 
   @override
   void initState() {
@@ -23,15 +24,35 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen> {
     _futureAppointments = _loadAppointments();
   }
 
-  Future<AppointmentResponse> _loadAppointments() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token')!;
-    final decoded = JwtDecoder.decode(token);
-    final donorId = decoded['userId'].toString();
+  AppointmentResponse? _appointmentResponse;
+  bool _noAppointments = false;
 
-    final api = AppointmentHistoryAPI();
-    return await api.fetchAppointments(donorId, token);
+  Future<void> _loadAppointments() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final decoded = JwtDecoder.decode(token!);
+      final donorId = decoded['userId'];
+
+      final api = AppointmentHistoryAPI();
+      final response = await api.fetchAppointments(donorId, token);
+      if (response == null) {
+        setState(() {
+          _noAppointments = true;
+          _appointmentResponse = null;
+        });
+      } else {
+        setState(() {
+          _appointmentResponse = response;
+          _noAppointments = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading appointments: $e');
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,21 +70,21 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: FutureBuilder<AppointmentResponse>(
+      body: FutureBuilder<void>(
         future: _futureAppointments,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
+          } /*else if (snapshot.hasError) {
             return Center(child: Text('Failed to load appointments.'));
-          } else if (!snapshot.hasData) {
-            return Center(child: Text('No appointments found.'));
+          }*/  else if (_noAppointments || _appointmentResponse == null) {
+            return const Center(child: Text('No appointments found.'));
           }
 
-          final appointments = snapshot.data!.appointments;
-          final total = snapshot.data!.total.toString();
-          final attended = snapshot.data!.attended.toString();
-          final expired = snapshot.data!.expired.toString();
+          final appointments = _appointmentResponse!.appointments;
+          final total = _appointmentResponse!.total.toString();
+          final attended = _appointmentResponse!.attended.toString();
+          final expired = _appointmentResponse!.expired.toString();
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
