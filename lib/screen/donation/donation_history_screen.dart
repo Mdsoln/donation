@@ -2,6 +2,8 @@
 import 'package:flutter/cupertino.dart';
 
 class DonationHistoryScreen extends StatefulWidget{
+  const DonationHistoryScreen({super.key});
+
   @override
   _DonationHistoryScreenState createState() => _DonationHistoryScreenState();
 }

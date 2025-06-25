@@ -10,7 +10,7 @@ class RegisterService {
     required String email,
     required String phone,
     required String password,
-    required String ageGroup,
+    required String age,
     required String gender,
   }) async {
     final url = Uri.parse("$_baseUrl/register-donor");
@@ -27,7 +27,7 @@ class RegisterService {
           "email": email,
           "phone": phone,
           "password": password,
-          "ageGroup": ageGroup,
+          "age": age,
           "gender": gender,
         }),
       );

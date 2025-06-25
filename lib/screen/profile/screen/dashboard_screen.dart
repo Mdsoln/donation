@@ -586,7 +586,7 @@ class AppDrawer extends StatelessWidget {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DonationHistoryScreen()),
+                    MaterialPageRoute(builder: (context) => MyAppointmentScreen()),
                   );
                 }),
                 _buildDrawerItem(Icons.warning, "Urgent Request", () {
