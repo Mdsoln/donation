@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: ClipOval(
                 child: user.picture.isNotEmpty
                     ? Image.network(
-                  "http://192.168.55.49:8080/images/${user.picture}",
+                  "http://192.168.212.49:8080/uploads/${user.picture}",
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
@@ -155,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  const _DetailTile(icon: Icons.location_on, title: "Location", value: "Mawasiliano"),
+                  const _DetailTile(icon: Icons.location_on, title: "Location", value: "Kijitonyama"),
                   _DetailTile(icon: Icons.calendar_today, title: "Date of Birth", value: user.dateOfBirth),
                   _DetailTile(icon: Icons.phone, title: "Phone Number", value: user.mobile),
                   _DetailTile(icon: Icons.email, title: "Email Address", value: user.email),
