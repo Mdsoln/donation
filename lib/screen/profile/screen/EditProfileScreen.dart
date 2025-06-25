@@ -97,7 +97,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   DateTime? _parseBirthDate(String text) {
     final formats = [
       DateFormat("dd MMM, yyyy"),       // e.g., "03 Aug, 2002"
-      DateFormat("dd MMMM, yyyy"),      // e.g., "03 August, 2002"
+      DateFormat("dd MMMM, yyyy"),
+      DateFormat("dd MMM yyyy"),// e.g., "03 August, 2002"
       DateFormat("yyyy-MM-dd"),         // in case it's already ISO
     ];
 
@@ -141,7 +142,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundImage: _imagePath != null
                       ? (_imageFile != null
                       ? FileImage(_imageFile!)
-                      : NetworkImage("http://192.168.55.49:8080/images/$_imagePath") as ImageProvider)
+                      : NetworkImage("http://192.168.212.49:8080/uploads/$_imagePath") as ImageProvider)
                       : null,
                   child: _imagePath == null && _imageFile == null
                       ? const Icon(Icons.person, size: 50)

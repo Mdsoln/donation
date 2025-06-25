@@ -94,7 +94,7 @@ class DashboardScreen extends StatelessWidget {
                           child: ClipOval(
                             child: user.picture.isNotEmpty
                                 ? Image.network(
-                              "http://192.168.223.49:8080/images/${user.picture}",
+                              "http://192.168.212.49:8080/uploads/${user.picture}",
                               width: 70,
                               height: 70,
                               fit: BoxFit.cover,
@@ -439,7 +439,7 @@ class DashboardScreen extends StatelessWidget {
             context,
                 () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DonationHistoryScreen()),
+              MaterialPageRoute(builder: (context) => MyAppointmentScreen()),
             ),
           ),
         ],
@@ -519,7 +519,7 @@ class AppDrawer extends StatelessWidget {
                     child: ClipOval(
                       child: user.picture.isNotEmpty
                           ? Image.network(
-                        "http://192.168.55.49:8080/images/${user.picture}",
+                        "http://192.168.212.49:8080/uploads/${user.picture}",
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,

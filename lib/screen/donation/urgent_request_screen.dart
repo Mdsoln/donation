@@ -5,14 +5,21 @@ class UrgentRequestScreen extends StatelessWidget {
   // Example data, ideally you'd get this from a backend API
   final List<BloodRequest> requests = [
     BloodRequest(
-      name: "Software Developer",
+      name: "Muddy Ramadhan",
       location: "Mwananyamala Hospital",
       bloodType: "A+",
       timeAgo: "1 hrs ago",
       condition: "Critical condition, urgent donation required",
     ),
     BloodRequest(
-      name: "Backend Developer",
+      name: "Aisha Mzava",
+      location: "Aga Khan Hospital",
+      bloodType: "AB-",
+      timeAgo: "2 hrs ago",
+      condition: "Critical condition, urgent donation required",
+    ),
+    BloodRequest(
+      name: "Amon Amon",
       location: "Aga Khan Hospital",
       bloodType: "AB-",
       timeAgo: "2 hrs ago",
