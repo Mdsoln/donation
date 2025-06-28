@@ -22,8 +22,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _selectedAge;
   String? _selectedGender;
-  bool? _takenAntibiotics;
-  bool? _recentInfection;
   bool isLoading = false;
 
   String? _validateFullName(String? value) {
@@ -68,7 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: emailController.text,
         phone: phoneController.text,
         password: passwordController.text,
-        ageGroup: ageController.text,
+        age: ageController.text,
         gender: genderController.text,
       );
 

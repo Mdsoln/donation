@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UrgentRequestScreen extends StatelessWidget {
-  // Example data, ideally you'd get this from a backend API
+
   final List<BloodRequest> requests = [
     BloodRequest(
       name: "Muddy Ramadhan",
@@ -15,7 +15,7 @@ class UrgentRequestScreen extends StatelessWidget {
       name: "Aisha Mzava",
       location: "Aga Khan Hospital",
       bloodType: "AB-",
-      timeAgo: "2 hrs ago",
+      timeAgo: "3 min ago",
       condition: "Critical condition, urgent donation required",
     ),
     BloodRequest(
