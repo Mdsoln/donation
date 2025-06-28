@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DonationGuidelinesScreen extends StatefulWidget {
   const DonationGuidelinesScreen({super.key});
@@ -9,38 +10,83 @@ class DonationGuidelinesScreen extends StatefulWidget {
 }
 
 class _DonationGuidelinesScreenState extends State<DonationGuidelinesScreen> {
-  List<FaqItem> faqItems = [
-    FaqItem(
-      question: "Eligibility to Donate?",
-      answer:
-      "You must be at least 17 years old, weigh 50kg or more, and be in good health. Avoid donating if you’ve had recent illness, tattoos, or risky behavior.",
-    ),
-    FaqItem(
-      question: "Best Practices Before Donation?",
-      answer:
-      "Stay hydrated, eat a healthy meal before donating, avoid fatty foods, and get plenty of sleep the night before.",
-    ),
-    FaqItem(
-      question: "What to Expect During Donation?",
-      answer:
-      "The donation process takes about 10 minutes. You'll sit comfortably while blood is drawn, followed by refreshments to help you recover.",
-    ),
-    FaqItem(
-      question: "Post-Donation Care?",
-      answer:
-      "Avoid heavy lifting or strenuous activity for the rest of the day. Drink extra fluids and eat well-balanced meals.",
-    ),
-    FaqItem(
-      question: "Facts About Blood Donation?",
-      answer:
-      "One donation can save up to 3 lives. Blood has a shelf life, so regular donations are essential. All blood types are needed.",
-    ),
-    FaqItem(
-      question: "Health Benefits of Donating?",
-      answer:
-      "Donating blood may reduce harmful iron stores, improve heart health, and give you a mini health check during each visit.",
-    ),
-  ];
+  late String _username;
+  late String _bloodType;
+  late String _ageGroup;
+  late String _gender;
+  late double _height;
+  late double _weight;
+  late bool _takenAntibiotics;
+  late bool _recentInfection;
+
+  List<FaqItem> faqItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
+
+  Future<void> _loadUserInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      _username = prefs.getString('username') ?? 'Donor';
+      _bloodType = prefs.getString('bloodGroup') ?? 'Unknown';
+      _ageGroup = prefs.getString('ageGroup') ?? '21-30';
+      _gender = prefs.getString('gender') ?? 'Male';
+      _height = prefs.getDouble("height") ?? 170.0;
+      _weight = prefs.getDouble('weight') ?? 70.0;
+    });
+
+    _buildPersonalizedFaq();
+  }
+
+  void _buildPersonalizedFaq() {
+    final postDonationAdvice = _gender == 'Female'
+        ? "Because of your gender, you are not allowed to donate blood until after 4 months."
+        : "You are not allowed to donate blood until after 3 months.";
+
+    faqItems = [
+      FaqItem(
+        question: "Hi $_username, are you eligible to donate?",
+        answer:
+        "Based on your '$_ageGroup' age group, $_height cm and $_weight kg is considered a healthy weight, you can keep this by using Samsung Health app."
+            " As a $_bloodType donor, your blood is especially valuable! "
+            "Avoid donating if you’ve been ill recently or taking antibiotics one week before donating date",
+      ),
+      FaqItem(
+        question: "Best Practices Before Donation?",
+        answer:
+        "Stay hydrated by drinking 2,000 ml (2L) of water a day, eat a healthy meal at least three meals per day, avoid fatty foods, and get plenty of sleep at least 6-8 hours before the donation date."
+          " Make 6,000 steps a day. Currently, you can use some apps for this like Samsung Health."
+      ),
+      FaqItem(
+        question: "What to Expect During Donation?",
+        answer:
+        "The donation itself takes about 10 minutes. Our staff will make sure you're comfortable, "
+            "and you'll get refreshments after!",
+      ),
+      FaqItem(
+        question: "Post-Donation Care?",
+        answer:
+        "Avoid heavy lifting or strenuous activity that day like push-ups, high jumps. Drink extra fluids and eat well-balanced meals. "
+            "$postDonationAdvice",
+      ),
+      FaqItem(
+        question: "How often can $_username donate?",
+        answer:
+        "Generally, every 3–4 months for whole blood. Plasma donations can be more frequent. "
+            "We’ll guide you individually.",
+      ),
+      FaqItem(
+        question: "Want to talk to us?",
+        answer:
+        "Call us at +255-7176-11117 or visit your nearest blood bank. We're always here to help you.",
+      ),
+    ];
+  }
+
 
   @override
   Widget build(BuildContext context) {

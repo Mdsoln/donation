@@ -22,8 +22,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _selectedAge;
   String? _selectedGender;
-  bool? _takenAntibiotics;
-  bool? _recentInfection;
   bool isLoading = false;
 
   String? _validateFullName(String? value) {

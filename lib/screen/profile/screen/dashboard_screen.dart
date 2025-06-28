@@ -94,7 +94,7 @@ class DashboardScreen extends StatelessWidget {
                           child: ClipOval(
                             child: user.picture.isNotEmpty
                                 ? Image.network(
-                              "http://192.168.212.49:8080/uploads/${user.picture}",
+                              "http://192.168.1.194:8080/uploads/${user.picture}",
                               width: 70,
                               height: 70,
                               fit: BoxFit.cover,
@@ -519,7 +519,7 @@ class AppDrawer extends StatelessWidget {
                     child: ClipOval(
                       child: user.picture.isNotEmpty
                           ? Image.network(
-                        "http://192.168.212.49:8080/uploads/${user.picture}",
+                        "http://192.168.1.194:8080/uploads/${user.picture}",
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
