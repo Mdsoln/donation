@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../profile/screen/dashboard_screen.dart';
+
 class UrgentRequestScreen extends StatelessWidget {
 
   final List<BloodRequest> requests = [
@@ -67,7 +69,7 @@ class UrgentRequestScreen extends StatelessWidget {
               child: ListView.builder(
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
-                  return _buildRequestCard(requests[index]);
+                  return _buildRequestCard(requests[index], context);
                 },
               ),
             ),
@@ -77,7 +79,7 @@ class UrgentRequestScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRequestCard(BloodRequest request) {
+  Widget _buildRequestCard(BloodRequest request, BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10),
       elevation: 3,
@@ -127,7 +129,7 @@ class UrgentRequestScreen extends StatelessWidget {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                // Handle accept action here
+                _showSuccessDialog(context);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red.shade600,
@@ -136,7 +138,11 @@ class UrgentRequestScreen extends StatelessWidget {
               ),
               child: Text(
                 "Accept Request",
-                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                ),
               ),
             ),
           ],
@@ -144,6 +150,70 @@ class UrgentRequestScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showSuccessDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => AlertDialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.6,
+            ),
+            child: Image.asset(
+              'assets/animation/ezgif.com-resize.gif',
+              fit: BoxFit.contain,
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            "Congratulations",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            "Your appointment has been scheduled successfully.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => DashboardScreen(),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red.shade600,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text(
+              "OKAY",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class BloodRequest {
