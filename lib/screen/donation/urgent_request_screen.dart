@@ -136,7 +136,11 @@ class UrgentRequestScreen extends StatelessWidget {
               ),
               child: Text(
                 "Accept Request",
-                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                ),
               ),
             ),
           ],
