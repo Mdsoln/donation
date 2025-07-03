@@ -158,7 +158,7 @@ void _showSuccessDialog(BuildContext context) {
     barrierDismissible: false,
     builder: (_) => AlertDialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -167,13 +167,14 @@ void _showSuccessDialog(BuildContext context) {
               maxWidth: MediaQuery.of(context).size.width * 0.6,
             ),
             child: Image.asset(
-              'assets/animation/ezgif.com-resize.gif',
+              'assets/images/urgent.jpeg',
               fit: BoxFit.contain,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           const Text(
-            "Congratulations",
+            "Thanks for accepting the request",
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -182,7 +183,7 @@ void _showSuccessDialog(BuildContext context) {
           ),
           const SizedBox(height: 8),
           const Text(
-            "Your appointment has been scheduled successfully.",
+            "Please contact +255-7176-11117 for more information",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
