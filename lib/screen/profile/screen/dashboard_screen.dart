@@ -9,7 +9,6 @@ import '../../appointment/models/appointment_card_model.dart';
 import '../../auth/models/auth_model.dart';
 import '../../auth/models/auth_provider.dart';
 import '../../appointment/screen/hospital_selection_screen.dart';
-import '../../donation/donation_history_screen.dart';
 import '../../auth/screen/login_screen.dart';
 import '../../general/guidlines/donation_guidlines.dart';
 import '../../report/screen/donor_report_screen.dart';
@@ -94,7 +93,7 @@ class DashboardScreen extends StatelessWidget {
                           child: ClipOval(
                             child: user.picture.isNotEmpty
                                 ? Image.network(
-                              "http://192.168.1.194:8080/uploads/${user.picture}",
+                              "http://192.168.1.194:8080/images/${user.picture}",
                               width: 70,
                               height: 70,
                               fit: BoxFit.cover,
@@ -519,7 +518,7 @@ class AppDrawer extends StatelessWidget {
                     child: ClipOval(
                       child: user.picture.isNotEmpty
                           ? Image.network(
-                        "http://192.168.1.194:8080/uploads/${user.picture}",
+                        "http://192.168.1.194:8080/images/${user.picture}",
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
